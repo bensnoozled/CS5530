@@ -3,7 +3,46 @@ package cs5530;
 import java.sql.*;
 
 public class User {
-	public User()
+	String m_login = "";
+	String m_password = "";
+
+	public String getM_login() {
+		return m_login;
+	}
+
+	public void setM_login(String m_login) {
+		this.m_login = m_login;
+	}
+
+	public String getM_password() {
+		return m_password;
+	}
+
+	public void setM_password(String m_password) {
+		this.m_password = m_password;
+	}
+
+	public String getM_name() {
+		return m_name;
+	}
+
+	public void setM_name(String m_name) {
+		this.m_name = m_name;
+	}
+
+	public String getM_address() {
+		return m_address;
+	}
+
+	public void setM_address(String m_address) {
+		this.m_address = m_address;
+	}
+
+	String m_name = "";
+	String m_address = "";
+
+
+	public void m_User()
 	{}
 
 	public String createUser(String login, String password, String name, String address, Statement stmt)
@@ -29,14 +68,17 @@ public class User {
 	public String userLogin(String login, String password, Statement stmt)
 	{
 		int result;
-		String sql="SELECT * FROM Users WHERE login = "+ login + " and password = " + password +";";
+		String sql="SELECT * FROM Users WHERE `login` = '"+ login + "' and `password` = '" + password +"';";
 		String output="";
 		ResultSet rs=null;
 		try{
 			rs=stmt.executeQuery(sql);
 			while (rs.next())
 			{
-				output+=rs.getString("name")+"   "+rs.getString("address")+"\n";
+				setM_login(login);
+				setM_address(rs.getString("address"));
+				setM_address(rs.getString("name"));
+				System.out.println("Welcome " + this.m_address + "!");
 			}
 
 			rs.close();

@@ -31,7 +31,7 @@ public class testdriver2 {
 		String password = "";
 		String name = "";
 		String address = "";
-
+		cs5530.User user = new cs5530.User();
 		String sql=null;
 		int c=0;
 		try
@@ -62,26 +62,39 @@ public class testdriver2 {
 					while ((login = in.readLine()) == null && login.length() == 0) ;
 					System.out.println("please enter password:");
 					while ((password = in.readLine()) == null && password.length() == 0) ;
+					System.out.println(user.userLogin(login, password, con.stmt));
+					c = 0;
 				}
+				else if (c == 2)
+				{
+					System.out.println("Please enter a UNIQUE login name");
+					while ((login = in.readLine()) == null && login.length() == 0) ;
+					System.out.println("please enter a password:");
+					while ((password = in.readLine()) == null && password.length() == 0) ;
+					System.out.println("please enter a name:");
+					while ((name = in.readLine()) == null && name.length() == 0) ;
+					System.out.println("please enter an address:");
+					while ((address = in.readLine()) == null && address.length() == 0) ;
+					System.out.println(user.createUser(login, password, name, address, con.stmt));
+					c = 0;
+					break;
+				}
+				else c = -1;
+
+				if(c == 0)
+				{
+					System.out.println("Welcome " + user.getM_name());
+				}
+
 				switch(c)
 				{
-					case 1:
+					case 0:
 					{
 
-						System.out.println("Please enter a UNIQUE login name");
-						while ((login = in.readLine()) == null && login.length() == 0) ;
-						System.out.println("please enter a password:");
-						while ((password = in.readLine()) == null && password.length() == 0) ;
-						System.out.println("please enter a name:");
-						while ((name = in.readLine()) == null && name.length() == 0) ;
-						System.out.println("please enter an address:");
-						while ((address = in.readLine()) == null && address.length() == 0) ;
-						cs5530.User user = new cs5530.User();
-						System.out.println(user.createUser(login, password, name, address, con.stmt));
-						break;
+
 					}
 
-					case 2:
+					case 1:
 					{
 						System.out.println("please enter your query below:");
 						while ((sql = in.readLine()) == null && sql.length() == 0)
