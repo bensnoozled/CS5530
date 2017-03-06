@@ -31,6 +31,7 @@ public class User {
 		int result;
 		String sql="SELECT * FROM Users WHERE login = "+ login + " and password = " + password +";";
 		String output="";
+		ResultSet rs=null;
 		try{
 			rs=stmt.executeQuery(sql);
 			while (rs.next())

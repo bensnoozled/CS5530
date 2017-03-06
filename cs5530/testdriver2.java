@@ -27,8 +27,11 @@ public class testdriver2 {
 		System.out.println("Example for cs5530");
 		Connector con=null;
 		String choice;
-		String cname;
-		String dname;
+		String login = "";
+		String password = "";
+		String name = "";
+		String address = "";
+
 		String sql=null;
 		int c=0;
 		try
@@ -64,10 +67,6 @@ public class testdriver2 {
 				{
 					case 1:
 					{
-						String login = "";
-						String password = "";
-						String name = "";
-						String address = "";
 
 						System.out.println("Please enter a UNIQUE login name");
 						while ((login = in.readLine()) == null && login.length() == 0) ;
