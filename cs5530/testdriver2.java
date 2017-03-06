@@ -32,6 +32,7 @@ public class testdriver2 {
 		String name = "";
 		String address = "";
 		cs5530.User user = new cs5530.User();
+		cs5530.TH th = new cs5530.TH();
 		String sql=null;
 		int c=0;
 		try
@@ -63,7 +64,11 @@ public class testdriver2 {
 					System.out.println("please enter password:");
 					while ((password = in.readLine()) == null && password.length() == 0) ;
 					System.out.println(user.userLogin(login, password, con.stmt));
-					c = 0;
+					
+					if(user.userLogin(login, password, con.stmt) == null)
+						c = -1;
+					else
+						c = 0;
 				}
 				else if (c == 2)
 				{
@@ -76,48 +81,66 @@ public class testdriver2 {
 					System.out.println("please enter an address:");
 					while ((address = in.readLine()) == null && address.length() == 0) ;
 					System.out.println(user.createUser(login, password, name, address, con.stmt));
+					
+					user.userLogin(login, password, con.stmt);
 					c = 0;
-					break;
+					
 				}
 				else c = -1;
 
-				if(c == 0)
+				while(c >= 0)
 				{
-					System.out.println("Welcome " + user.getM_name());
-				}
-
-				switch(c)
-				{
-					case 0:
+					if(c == 0)
 					{
-
-
+						System.out.println("Welcome " + user.getM_name());
+						System.out.println("");
+						System.out.println("1. Enter your own query");
+						System.out.println("2. Register a new TH");
+						
+						while ((choice = in.readLine()) == null && choice.length() == 0 && c >= 0 && c <= 1) ;
+						c = Integer.parseInt(choice);
 					}
-
-					case 1:
+	
+					switch(c)
 					{
-						System.out.println("please enter your query below:");
-						while ((sql = in.readLine()) == null && sql.length() == 0)
-							System.out.println(sql);
-						System.out.println(con.stmt.executeUpdate(sql) + " rows updated");
-						//	            		 ResultSet rs=con.stmt.executeUpdate(sql);
-						//	            		 ResultSetMetaData rsmd = rs.getMetaData();
-						//	            		 int numCols = rsmd.getColumnCount();
-						//	            		 while (rs.next())
-						//	            		 {
-						//	            			 //System.out.print("cname:");
-						//	            			 for (int i=1; i<=numCols;i++)
-						//	            				 System.out.print(rs.getString(i)+"  ");
-						//	            			 System.out.println("");
-						//	            		 }
-						//	            		 System.out.println(" ");
-						//	            		 rs.close();
-					}
-					default:
-					{
-						System.out.println("EoM");
-						con.stmt.close();
-						break;
+						case 1:
+						{
+							System.out.println("please enter your query below:");
+							while ((sql = in.readLine()) == null && sql.length() == 0)
+								System.out.println(sql);
+							System.out.println(con.stmt.executeUpdate(sql) + " rows updated");
+							//	            		 ResultSet rs=con.stmt.executeUpdate(sql);
+							//	            		 ResultSetMetaData rsmd = rs.getMetaData();
+							//	            		 int numCols = rsmd.getColumnCount();
+							//	            		 while (rs.next())
+							//	            		 {
+							//	            			 //System.out.print("cname:");
+							//	            			 for (int i=1; i<=numCols;i++)
+							//	            				 System.out.print(rs.getString(i)+"  ");
+							//	            			 System.out.println("");
+							//	            		 }
+							//	            		 System.out.println(" ");
+							//	            		 rs.close();
+							c = 0;
+						}
+						case 2:
+						{
+							String category;
+							System.out.println("Please enter a TH category");
+							
+							while ((category = in.readLine()) == null && category.length() == 0)
+								System.out.println("Please enter a TH category");
+							
+							System.out.println(th.createTH(user, con.stmt, category));
+							
+							c = 0;
+						}
+						default:
+						{
+							System.out.println("EoM");
+							con.stmt.close();
+							break;
+						}
 					}
 				}
 			}

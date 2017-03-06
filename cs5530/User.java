@@ -73,12 +73,18 @@ public class User {
 		ResultSet rs=null;
 		try{
 			rs=stmt.executeQuery(sql);
+			
+			if(!rs.last())
+			{
+				throw new Exception();
+			}
+			rs.beforeFirst();
+
 			while (rs.next())
 			{
-				setM_login(login);
-				setM_address(rs.getString("address"));
-				setM_address(rs.getString("name"));
-				System.out.println("Welcome " + this.m_address + "!");
+				this.setM_login(login);
+				this.setM_address(rs.getString("address"));
+				this.setM_name(rs.getString("name"));
 			}
 
 			rs.close();
@@ -86,6 +92,7 @@ public class User {
 		catch(Exception e)
 		{
 			System.out.println("Cannot login. Please verify login and password are valid");
+			return null;
 		}
 		finally
 		{
