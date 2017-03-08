@@ -45,27 +45,31 @@ public class User {
 	public void m_User()
 	{}
 
-	public String createUser(String login, String password, String name, String address, Statement stmt)
+	public boolean createUser(String login, String password, String name, String address, Statement stmt)
 	{
 		int result;
 		String sql="INSERT INTO Users (`login`, `password`, `name`, `address`) VALUES ('"+ login + "', '" + password + "', '" + name + "', '" + address + "')";
-		String output="";
 		System.out.println("executing "+sql);
 		try{
 			result=stmt.executeUpdate(sql);
 			if(result > 0)
-				output = "success";
+			{
+				return true;
+			}
+			else
+			{
+				System.out.println("User not created. Check input fields.");
+				return false;
+			}
 		}
 		catch(Exception e)
 		{
-			output = "Failed! Please verify that you have entered valid data in all fields.";
-			System.out.println("cannot execute the query");
+			System.out.println("Cannot execute the query.");
+			return false;
 		}
-
-		return output;
 	}
 
-	public String userLogin(String login, String password, Statement stmt)
+	public boolean userLogin(String login, String password, Statement stmt)
 	{
 		int result;
 		String sql="SELECT * FROM Users WHERE `login` = '"+ login + "' and `password` = '" + password +"';";
@@ -92,7 +96,7 @@ public class User {
 		catch(Exception e)
 		{
 			System.out.println("Cannot login. Please verify login and password are valid");
-			return null;
+			return false;
 		}
 		finally
 		{
@@ -105,6 +109,6 @@ public class User {
 				System.out.println("cannot close resultset");
 			}
 		}
-		return output;
+		return true;
 	}
 }

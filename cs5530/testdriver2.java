@@ -8,19 +8,13 @@ import java.io.*;
 
 
 
-public class testdriver2 {
+public class testdriver2
+{
 
 	/**
 	 * @param args
 	 */
-	public static void displayMenu()
-	{
-		System.out.println("        Welcome to the UTEL System     ");
-		System.out.println("1. Existing User Login");
-		System.out.println("2. New User Registration:");
-		System.out.println("3. exit:");
-		System.out.println("please enter your choice:");
-	}
+	static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -40,88 +34,69 @@ public class testdriver2 {
 			//remember to replace the password
 			con= new Connector();
 			System.out.println ("Database connection established");
-
-			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-
+			System.out.println("");
+			
 			while(true)
 			{
-				displayMenu();
-				while ((choice = in.readLine()) == null && choice.length() == 0);
-				try{
-					c = Integer.parseInt(choice);
-				}catch (Exception e)
-				{
-
+				displayLoginMenu();
+				
+				try{c = Integer.parseInt(readInput(""));}catch (Exception e){ c = -1; continue;}
+				
+				if (c<0 | c>2)
 					continue;
+
+				if(c == 0) //Exit Program
+				{
+					con.closeConnection();
+					System.out.println ("Database connection terminated");
+					break;
 				}
-				if (c<1 | c>4)
-					continue;
-
-				if (c==1)
+				
+				if (c == 1) //Login User
 				{
-					System.out.println("Please enter login");
-					while ((login = in.readLine()) == null && login.length() == 0) ;
-					System.out.println("please enter password:");
-					while ((password = in.readLine()) == null && password.length() == 0) ;
-					System.out.println(user.userLogin(login, password, con.stmt));
+					login = readInput("Please enter login");
+					password = readInput("please enter password:");
+
+					c = user.userLogin(login, password, con.stmt) ? 0 : -1;
+				}
+				else if (c == 2) //Register User
+				{
+					login = readInput("Please enter a UNIQUE login name");
+					password = readInput("please enter a password:");
+					login = readInput("please enter a name:");
+					address = readInput("please enter an address:");
 					
-					if(user.userLogin(login, password, con.stmt) == null)
-						c = -1;
+					if(user.createUser(login, password, name, address, con.stmt))
+						user.userLogin(login, password, con.stmt); //User has been created successfully , log him in!
 					else
-						c = 0;
+						continue;								   //Something went wrong bring user back to the login menu.
+									
 				}
-				else if (c == 2)
+				else //Troll Input
 				{
-					System.out.println("Please enter a UNIQUE login name");
-					while ((login = in.readLine()) == null && login.length() == 0) ;
-					System.out.println("please enter a password:");
-					while ((password = in.readLine()) == null && password.length() == 0) ;
-					System.out.println("please enter a name:");
-					while ((name = in.readLine()) == null && name.length() == 0) ;
-					System.out.println("please enter an address:");
-					while ((address = in.readLine()) == null && address.length() == 0) ;
-					System.out.println(user.createUser(login, password, name, address, con.stmt));
-					
-					user.userLogin(login, password, con.stmt);
-					c = 0;
-					
+					continue; 
 				}
-				else c = -1;
 
 				while(c >= 0)
 				{
-					if(c == 0)
+					if(c == 0) //Main menu for user
 					{
-						System.out.println("Welcome " + user.getM_name());
-						System.out.println("");
-						System.out.println("1. Enter your own query");
-						System.out.println("2. Register a new TH");
-						System.out.println("3. Make a reservation");
+						displayMainMenu(user);
 						
-						while ((choice = in.readLine()) == null && choice.length() == 0 && c >= 0 && c <= 1) ;
-						c = Integer.parseInt(choice);
+						try{c = Integer.parseInt(readInput(""));}catch (Exception e){ c = -1; continue;}
+						
+						if(c == 0) //Logout
+						{
+							break;
+						}
 					}
 	
 					switch(c)
 					{
 						case 1:
 						{
-							System.out.println("please enter your query below:");
-							while ((sql = in.readLine()) == null && sql.length() == 0)
-								System.out.println(sql);
+							sql = readInput("please enter your query below:");
 							System.out.println(con.stmt.executeUpdate(sql) + " rows updated");
-							//	            		 ResultSet rs=con.stmt.executeUpdate(sql);
-							//	            		 ResultSetMetaData rsmd = rs.getMetaData();
-							//	            		 int numCols = rsmd.getColumnCount();
-							//	            		 while (rs.next())
-							//	            		 {
-							//	            			 //System.out.print("cname:");
-							//	            			 for (int i=1; i<=numCols;i++)
-							//	            				 System.out.print(rs.getString(i)+"  ");
-							//	            			 System.out.println("");
-							//	            		 }
-							//	            		 System.out.println(" ");
-							//	            		 rs.close();
 							c = 0;
 						}
 						case 2:
@@ -129,8 +104,7 @@ public class testdriver2 {
 							String category;
 							System.out.println("Please enter a TH category");
 							
-							while ((category = in.readLine()) == null && category.length() == 0)
-								System.out.println("Please enter a TH category");
+							category = readInput("Please enter a TH category");
 							
 							System.out.println(th.createTH(user, con.stmt, category));
 							
@@ -168,5 +142,42 @@ public class testdriver2 {
 				catch (Exception e) { /* ignore close errors */ }
 			}
 		}
+	}
+	
+	public static void displayLoginMenu()
+	{
+		System.out.println("Welcome to the UTEL System");
+		System.out.println("");
+		System.out.println("0. Exit");
+		System.out.println("1. Existing User Login");
+		System.out.println("2. New User Registration");
+		System.out.println("");
+	}
+	
+	public static void displayMainMenu(User user)
+	{
+		System.out.println("Welcome " + user.getM_name());
+		System.out.println("");
+		System.out.println("0. Logout");
+		System.out.println("1. Enter your own query");
+		System.out.println("2. Register a new TH");
+		System.out.println("3. Make a reservation");
+		System.out.println("");
+	}
+	
+	public static String readInput(String message)
+	{
+		System.out.println(message);
+		
+		String temp = "";
+		try
+		{
+			while ((temp = in.readLine()) == null && temp.length() == 0) ;
+		}
+		catch(Exception e)
+		{
+			System.out.println("Invalid Input");
+		}
+		return temp;
 	}
 }
