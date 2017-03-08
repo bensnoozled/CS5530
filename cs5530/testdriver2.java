@@ -96,6 +96,7 @@ public class testdriver2 {
 						System.out.println("");
 						System.out.println("1. Enter your own query");
 						System.out.println("2. Register a new TH");
+						System.out.println("3. Make a reservation");
 						
 						while ((choice = in.readLine()) == null && choice.length() == 0 && c >= 0 && c <= 1) ;
 						c = Integer.parseInt(choice);
@@ -134,6 +135,10 @@ public class testdriver2 {
 							System.out.println(th.createTH(user, con.stmt, category));
 							
 							c = 0;
+						}
+						case 3:
+						{
+
 						}
 						default:
 						{
