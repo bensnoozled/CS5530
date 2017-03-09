@@ -49,7 +49,6 @@ public class User {
 	{
 		int result;
 		String sql="INSERT INTO Users (`login`, `password`, `name`, `address`) VALUES ('"+ login + "', '" + password + "', '" + name + "', '" + address + "')";
-		System.out.println("executing "+sql);
 		try{
 			result=stmt.executeUpdate(sql);
 			if(result > 0)
@@ -64,7 +63,7 @@ public class User {
 		}
 		catch(Exception e)
 		{
-			System.out.println("Cannot execute the query.");
+			System.err.println("Cannot execute the query.");
 			return false;
 		}
 	}
@@ -95,7 +94,7 @@ public class User {
 		}
 		catch(Exception e)
 		{
-			System.out.println("Cannot login. Please verify login and password are valid");
+			System.err.println("Cannot login. Please verify login and password are valid");
 			return false;
 		}
 		finally
@@ -106,7 +105,7 @@ public class User {
 			}
 			catch(Exception e)
 			{
-				System.out.println("cannot close resultset");
+				System.err.println("cannot close resultset");
 			}
 		}
 		return true;

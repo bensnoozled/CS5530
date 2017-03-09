@@ -36,7 +36,7 @@ public class testdriver2
 			System.out.println ("Database connection established");
 			System.out.println("");
 			
-			while(true)
+			while(true) //Main Loop
 			{
 				displayLoginMenu();
 				
@@ -63,24 +63,29 @@ public class testdriver2
 				{
 					login = readInput("Please enter a UNIQUE login name");
 					password = readInput("please enter a password:");
-					login = readInput("please enter a name:");
+					name = readInput("please enter a name:");
 					address = readInput("please enter an address:");
 					
 					if(user.createUser(login, password, name, address, con.stmt))
+					{						
+						c = 0; 
 						user.userLogin(login, password, con.stmt); //User has been created successfully , log him in!
+					}
 					else
+					{
+						c = -1;
 						continue;								   //Something went wrong bring user back to the login menu.
+					}
 									
 				}
 				else //Troll Input
 				{
+					c = -1;
 					continue; 
 				}
 
-				while(c >= 0)
+				while(c >= 0) //Login Menu Loop
 				{
-					if(c == 0) //Main menu for user
-					{
 						displayMainMenu(user);
 						
 						try{c = Integer.parseInt(readInput(""));}catch (Exception e){ c = -1; continue;}
@@ -89,7 +94,6 @@ public class testdriver2
 						{
 							break;
 						}
-					}
 	
 					switch(c)
 					{
@@ -97,23 +101,22 @@ public class testdriver2
 						{
 							sql = readInput("please enter your query below:");
 							System.out.println(con.stmt.executeUpdate(sql) + " rows updated");
-							c = 0;
+							break;
 						}
 						case 2:
 						{
 							String category;
-							System.out.println("Please enter a TH category");
+							category = readInput("Please enter a TH category to create a TH");
 							
-							category = readInput("Please enter a TH category");
-							
-							System.out.println(th.createTH(user, con.stmt, category));
-							
-							c = 0;
+							String eMessage = "Ensure all fields are entered correctly.";
+							System.out.println(th.createTH(user, con.stmt, category) ? "success" : eMessage);
+							break;
 						}
 						case 3:
 						{
-
-						}
+							th.updateTH(user, con.stmt);
+							break;
+						}					
 						default:
 						{
 							System.out.println("EoM");
@@ -161,7 +164,8 @@ public class testdriver2
 		System.out.println("0. Logout");
 		System.out.println("1. Enter your own query");
 		System.out.println("2. Register a new TH");
-		System.out.println("3. Make a reservation");
+		System.out.println("3. Update a TH you own.");
+		System.out.println("4. Make a reservation");
 		System.out.println("");
 	}
 	
