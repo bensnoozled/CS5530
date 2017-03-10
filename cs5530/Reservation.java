@@ -17,11 +17,11 @@ public class Reservation {
 	Date m_out = new Date();
 	float m_cost;
 
-	boolean createReservation(String startDate, String endDate, int hid, Statement stmt) {
+	public boolean createReservation(String startDate, String endDate, int hid, Statement stmt) {
 		String sql = "Select * from Reserve R, Period P where R.hid = P.pid and R.pid = " + hid + " and P.to >= DATE_FORMAT('" + startDate + "', '%Y-%c-%d' )AND P.from  <= DATE_FORMAT('" + endDate + "', '%Y-%c-%d') ";
 		String output = "";
 		ResultSet rs = null;
-		int c = 0;
+		int c = 1;
 
 		while (c == 1)
 		{
@@ -45,7 +45,7 @@ public class Reservation {
 			}
 			if (output != "") {
 				try {
-					c = Integer.parseInt(readInput("A reservation exists for that date. Try again?\n 1: yes\n2: no"));
+					c = Integer.parseInt(readInput("A reservation exists for that date. Try again?\n 1: yes\n 2: no"));
 				} catch (Exception e) {
 					c = -1;
 					continue;
@@ -55,6 +55,10 @@ public class Reservation {
 					c = Integer.parseInt(readInput("Dates availiable! Do you wish to proceed with reservation creation? " +
 							"The following reservation will be made:\n" +
 							"From " + startDate + " to " + endDate + " for housing number " + hid + "\n 1: yes\n2: no"));
+					String periodSql = "INSERT INTO `Period` (`from`, `to`) VALUES ('" + startDate + "', '" + endDate + "');\n";
+					String reservationSql = "INSERT INTO `5530db40`.`Reserve` (`login`, `hid`, `pid`, `cost`) VALUES ('test', 1, (SELECT pid from Period WHERE `from` = DATE_FORMAT('" + startDate + "', '%Y-%c-%d' ) and `to` = DATE_FORMAT('" + endDate + "', '%Y-%c-%d')), (SELECT pricePerNight FROM Available WHERE hid = " + hid + "));"
+
+
 				} catch (Exception e) {
 					c = -1;
 					continue;
@@ -62,8 +66,8 @@ public class Reservation {
 
 			}
 
-			return false;
 		}
+		return false;
 	}
 
 	public static String readInput(String message)

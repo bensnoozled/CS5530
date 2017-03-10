@@ -4,8 +4,8 @@ package cs5530;
 import java.lang.*;
 import java.sql.*;
 import java.io.*;
-
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class testdriver2
@@ -116,7 +116,29 @@ public class testdriver2
 						{
 							th.updateTH(user, con.stmt);
 							break;
-						}					
+						}
+						case 4:
+						{
+							cs5530.Reservation res = new cs5530.Reservation();
+							int hid;
+							try{hid = Integer.parseInt(readInput("Enter desired HID number for your reservation"));}catch (Exception e){ c = -1; continue;}
+
+							String startDate = readInput("Enter desired start date.\nMust be in the format of yyyy-MM-dd");
+							if(!dateValidator(startDate))
+							{
+								startDate = readInput("Invalid date! Please insert a valid date\nMust be in the format of yyyy-MM-dd");
+							}
+
+							String endDate = readInput("Enter desired end date.\nMust be in the format of yyyy-MM-dd");
+							if(!dateValidator(startDate))
+							{
+								endDate = readInput("Invalid date! Please insert a valid date\nMust be in the format of yyyy-MM-dd");
+							}
+
+							res.createReservation(startDate, endDate, hid, con.stmt);
+
+							break;
+						}
 						default:
 						{
 							System.out.println("EoM");
@@ -183,5 +205,18 @@ public class testdriver2
 			System.out.println("Invalid Input");
 		}
 		return temp;
+	}
+
+	public static boolean dateValidator(String date)
+	{
+		String pattern = "^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$";
+		Pattern p = Pattern.compile(pattern);
+
+		Matcher m = p.matcher(date);
+
+		if(m.find())
+			return true;
+		else
+			return false;
 	}
 }
