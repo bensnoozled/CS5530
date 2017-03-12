@@ -28,6 +28,7 @@ public class testdriver2
 		cs5530.User user = new cs5530.User();
 		cs5530.TH th = new cs5530.TH();
 		cs5530.Favorites fav = new Favorites();
+		cs5530.Feedback feed = new Feedback();
 		String sql=null;
 		int c=0;
 		try
@@ -145,6 +146,11 @@ public class testdriver2
 							fav.addFavorite(user, con.stmt);
 							break;
 						}
+						case 6:
+						{
+							feed.leaveFeedback(user, con.stmt, con.con);
+							break;
+						}
 						default:
 						{
 							System.out.println("EoM");
@@ -192,9 +198,10 @@ public class testdriver2
 		System.out.println("0. Logout");
 		System.out.println("1. Enter your own query");
 		System.out.println("2. Register a new TH");
-		System.out.println("\t3. Update a TH you own.");
+		System.out.println("\t3. Update a TH you own");
 		System.out.println("4. Make a reservation");
 		System.out.println("5. Favorite a TH");
+		System.out.println("6. Leave Feedback on a TH");
 		System.out.println("");
 	}
 	
