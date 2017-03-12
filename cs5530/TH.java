@@ -44,7 +44,7 @@ public class TH
 			
 			if(!rs.last())
 			{
-				System.out.println("You don't own any THs!");
+				System.err.println("You don't own any THs!");
 				return;
 			}
 			rs.beforeFirst();
@@ -59,7 +59,7 @@ public class TH
 			}
 			
 			int choice;
-			try{choice = Integer.parseInt(readInput("Enter an hid to modify"));}catch (Exception e){ return;}
+			try{choice = Integer.parseInt(readInput("Enter an hid to modify"));}catch (Exception e){System.err.println("Invalid hid input."); return;}
 			
 			if(hids.contains(choice))
 			{
