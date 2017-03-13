@@ -30,7 +30,7 @@ public class Favorites
 			
 			System.out.println("Select an hid to favorite");
 			System.out.println();
-			System.out.println("hid \t category");
+			System.out.println("[hid] \t [category]");
 			while (rs.next())
 			{
 				hids.add(rs.getInt("hid"));

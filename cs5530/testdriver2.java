@@ -30,6 +30,7 @@ public class testdriver2
 		cs5530.Favorites fav = new Favorites();
 		cs5530.Feedback feed = new Feedback();
 		cs5530.FeedbackRating fr = new FeedbackRating();
+		cs5530.Trusts trust = new Trusts();
 		String sql=null;
 		int c=0;
 		try
@@ -157,6 +158,11 @@ public class testdriver2
 							fr.rateFeedback(user, con.stmt);
 							break;
 						}
+						case 8:
+						{
+							trust.modifyTrust(user, con.stmt);
+							break;
+						}
 						default:
 						{
 							System.out.println("EoM");
@@ -208,7 +214,8 @@ public class testdriver2
 		System.out.println("4. Make a reservation");
 		System.out.println("5. Favorite a TH");
 		System.out.println("6. Leave Feedback on a TH");
-		System.out.println("7. Leave a rating on a Feedback");
+		System.out.println("\t7. Leave a rating on a Feedback");
+		System.out.println("8. Trust or Distrust another User.");
 		System.out.println("");
 	}
 	

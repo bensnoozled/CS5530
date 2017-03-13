@@ -34,7 +34,7 @@ public class FeedbackRating
 			
 			System.out.println("Select an fid to rate");
 			System.out.println();
-			System.out.println("fid");
+			System.out.println("[fid]");
 			while (rs.next())
 			{
 				fids.add(rs.getInt("fid"));

@@ -51,7 +51,7 @@ public class TH
 			
 			ArrayList<Integer> hids = new ArrayList<Integer>();
 			
-			System.out.println("hid \t category");
+			System.out.println("[hid] \t [category]");
 			while (rs.next())
 			{
 				hids.add(rs.getInt("hid"));
