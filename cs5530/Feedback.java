@@ -32,7 +32,7 @@ public class Feedback
 			
 			ArrayList<Integer> hids = new ArrayList<Integer>();
 			
-			System.out.println("Select an hid to leave feedack on");
+			System.out.println("Select an hid to leave feedback on");
 			System.out.println();
 			System.out.println("hid \t category");
 			while (rs.next())
@@ -47,11 +47,11 @@ public class Feedback
 			if(hids.contains(choice))
 			{
 				int score;
-				try{score = Integer.parseInt(readInput("Enter a score for this TH"));}catch (Exception e){ System.err.println("Invalid score input."); return;}
+				try{score = Integer.parseInt(readInput("Enter a score for this TH (from 0-10)"));}catch (Exception e){ System.err.println("Invalid score input."); return;}
 				
 				if(score < 0 || score > 10)
 				{
-					System.err.println("Invalid score input.");
+					System.err.println("Invalid score input. Make sure your score was from 1-10!");
 					return;
 				}
 				String text = readInput("Any comment on this TH?");
