@@ -58,10 +58,35 @@ public class Reservation {
 					String periodSql = "INSERT INTO `Period` (`from`, `to`) VALUES ('" + startDate + "', '" + endDate + "');\n";
 					String reservationSql = "INSERT INTO `5530db40`.`Reserve` (`login`, `hid`, `pid`, `cost`) VALUES ('test', 1, (SELECT pid from Period WHERE `from` = DATE_FORMAT('" + startDate + "', '%Y-%c-%d' ) and `to` = DATE_FORMAT('" + endDate + "', '%Y-%c-%d')), (SELECT pricePerNight FROM Available WHERE hid = " + hid + "));";
 
+					if(c == 1)
+					{
+						int result;
+						stmt.executeUpdate(periodSql);
+						result=stmt.executeUpdate(reservationSql);
+
+						if(result > 0)
+						{
+							System.out.println("Reservation successfully made!");
+							return true;
+						}
+						else
+						{
+							System.out.println("Reservation not created. Check input fields.");
+							return false;
+						}
+
+					}
+					else
+					{
+						System.out.println("Reservation cancelled");
+						return false;
+					}
+
+
 
 				} catch (Exception e) {
-					c = -1;
-					continue;
+					System.out.println("Reservation not created. Check input fields.");
+					return false;
 				}
 
 			}

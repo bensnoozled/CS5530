@@ -18,7 +18,7 @@ public class testdriver2
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		System.out.println("Example for cs5530");
+		//System.out.println("Example for cs5530");
 		Connector con=null;
 		String choice;
 		String login = "";
