@@ -163,6 +163,11 @@ public class testdriver2
 							trust.modifyTrust(user, con.stmt);
 							break;
 						}
+						case 9:
+						{
+							th.topNMostUsefulFeedbacks(user, con.stmt);
+							break;
+						}
 						default:
 						{
 							System.out.println("EoM");
@@ -216,6 +221,7 @@ public class testdriver2
 		System.out.println("6. Leave Feedback on a TH");
 		System.out.println("\t7. Leave a rating on a Feedback");
 		System.out.println("8. Trust or Distrust another User.");
+		System.out.println("9. Get the (N) most useful feedbacks on a TH");
 		System.out.println("");
 	}
 	

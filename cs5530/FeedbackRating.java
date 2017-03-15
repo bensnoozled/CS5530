@@ -72,6 +72,7 @@ public class FeedbackRating
 		}
 	}
 	
+	
 	public static String readInput(String message)
 	{
 		System.out.println(message);
