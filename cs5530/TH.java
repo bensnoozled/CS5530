@@ -138,6 +138,33 @@ public class TH
 		}
 	}
 	
+	public void suggestTH(User usr, Statement stmt)
+	{
+		ResultSet rs;
+		String suggestTH="SELECT hid , category FROM TH where login = '" + usr.m_login + "' ";
+		try
+		{
+			rs = stmt.executeQuery(suggestTH);
+			
+			if(!rs.last())
+			{
+				System.err.println("The feedbacks for this house have never been rated!");
+				return;
+			}
+			rs.beforeFirst();
+			
+			System.out.println("[text] \t [Average Rating]");
+			while (rs.next())
+			{
+				System.out.println(rs.getString("text") +" \t "+ rs.getString("avgRating")); 
+			}
+		}
+		catch(Exception e)
+		{
+			System.err.println("cannot execute the query");
+		}
+	}
+	
 	public static String readInput(String message)
 	{
 		System.out.println(message);
