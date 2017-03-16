@@ -125,8 +125,7 @@ public class testdriver2
 						}
 						case 4:
 						{
-
-							res.createReservation(user, con.stmt);
+							res.createReservation(user, th , con.stmt);
 
 							break;
 						}
@@ -209,7 +208,7 @@ public class testdriver2
 		System.out.println("1. Enter your own query");
 		System.out.println("2. Register a new TH");
 		System.out.println("\t3. Update a TH you own");
-		System.out.println("4. Make a reservation");
+		System.out.println("4. Make a reservation (get suggestions on THs you should reserve)");
 		System.out.println("5. Favorite a TH");
 		System.out.println("6. Leave Feedback on a TH");
 		System.out.println("\t7. Leave a rating on a Feedback");

@@ -69,7 +69,7 @@ public class Reservation{
 	String m_start;
 	String m_end;
 
-	public boolean createReservation(cs5530.User user, Statement stmt) {
+	public boolean createReservation(cs5530.User user, cs5530.TH th , Statement stmt) {
 		int hid = 0;
 		int c = 1;
 		try{hid = Integer.parseInt(readInput("Enter desired HID number for your reservation"));}catch (Exception e){ c = -1; }
@@ -123,7 +123,7 @@ public class Reservation{
 							"The following reservation will be made:\n" +
 							"From " + startDate + " to " + endDate + " for housing number " + hid + "\n 1: yes\n2: no"));
 					String periodSql = "INSERT INTO `Period` (`from`, `to`) VALUES ('" + startDate + "', '" + endDate + "');\n";
-					String reservationSql = "INSERT INTO `5530db40`.`Reserve` (`login`, `hid`, `pid`, `cost`) VALUES (" + user.m_login + ", 1, (SELECT pid from Period WHERE `from` = DATE_FORMAT('" + startDate + "', '%Y-%c-%d' ) and `to` = DATE_FORMAT('" + endDate + "', '%Y-%c-%d')), (SELECT pricePerNight FROM Available WHERE hid = " + hid + "));";
+					String reservationSql = "INSERT INTO `5530db40`.`Reserve` (`login`, `hid`, `pid`, `cost`) VALUES ('" + user.m_login + "', 1, (SELECT pid from Period WHERE `from` = DATE_FORMAT('" + startDate + "', '%Y-%c-%d' ) and `to` = DATE_FORMAT('" + endDate + "', '%Y-%c-%d')), (SELECT pricePerNight FROM Available WHERE hid = " + hid + "));";
 
 					if(c == 1)
 					{
@@ -134,6 +134,9 @@ public class Reservation{
 						if(result > 0)
 						{
 							System.out.println("Reservation successfully made!");
+							
+							th.suggestTH(user, hid, stmt);
+							
 							return true;
 						}
 						else
@@ -153,6 +156,7 @@ public class Reservation{
 
 				} catch (Exception e) {
 					System.out.println("Reservation not created. Check input fields.");
+					System.err.println(e.getMessage());
 					return false;
 				}
 
