@@ -17,40 +17,77 @@ public class Statistics
 		try{listSize = Integer.parseInt(readInput("Enter the amount list size for the following statistics (m)"));}catch (Exception e){ System.err.println("Invalid list size input."); return;}
 		
 		ResultSet rs;
-		String allNonFavHouses="SELECT * from TH where hid not in (Select hid from Favorites where login = '"+usr.m_login+"') ;";
+		String popTHByCategory="Select category, hid , visitCount from (SELECT V.hid, TH.Category , count(V.hid) as visitCount, @category_rank := IF(@current_category = TH.Category, @category_rank + 1, 1) AS category_count, @current_category := TH.category FROM (Select count(hid) as vc, login, hid , pid from Visit V group by login , hid, pid order by vc desc) as V join TH on (V.hid = TH.hid) group by category , hid order by visitCount desc) as sub where category_count <= "+listSize+";";
 		try
 		{
-			rs=stmt.executeQuery(allNonFavHouses);
+			rs=stmt.executeQuery(popTHByCategory);
 			
 			if(!rs.last())
 			{
-				System.err.println("There aren't any houses registered you haven't favorited!");
+				System.out.println("No house has been visited by any registered categories.");
 				return;
 			}
 			rs.beforeFirst();
 			
-			ArrayList<Integer> hids = new ArrayList<Integer>();
-			
-			System.out.println("Select an hid to favorite");
+			System.out.println(listSize + " most popular THs by category.");
 			System.out.println();
-			System.out.println("[hid] \t [category]");
+			System.out.println("[category] \t [hid] \t [visitCount]");
 			while (rs.next())
 			{
-				hids.add(rs.getInt("hid"));
-				System.out.println(rs.getString("hid") +" \t "+ rs.getString("category")); 
+				System.out.println(rs.getString("category") +" \t "+ rs.getString("hid") + " \t "+ rs.getString("visitCount")); 
 			}
+		}
+		catch(Exception e)
+		{
+			//System.err.println(e.getMessage());
+			System.err.println("cannot execute the query");
+		}
+		
+		String mostExpensiveHousesByCategory="Select category, hid , averageCost from (SELECT V.hid, TH.Category , avg(V.cost) as averageCost, @category_rank := IF(@current_category = TH.Category, @category_rank + 1, 1) AS category_count, @current_category := TH.category FROM Visit V join TH on (V.hid = TH.hid) group by category , hid order by averageCost desc) as sub where category_count <= "+listSize+";";
+		try
+		{
+			rs=stmt.executeQuery(mostExpensiveHousesByCategory);
 			
-			int choice;
-			try{choice = Integer.parseInt(readInput("Enter an hid to favorite"));}catch (Exception e){ System.err.println("Invalid hid input."); return;}
-			
-			if(hids.contains(choice))
+			if(!rs.last())
 			{
-				String updateFavorites = "Insert into Favorites (hid, login) values ("+choice+", '"+ usr.m_login +"')";
-				stmt.executeUpdate(updateFavorites);
+				System.out.println("No house has been visited by any registered categories.");
+				return;
 			}
-			else
+			rs.beforeFirst();
+			
+			System.out.println(listSize + " most expensive THs by category.");
+			System.out.println();
+			System.out.println("[category] \t [hid] \t [averageCost]");
+			while (rs.next())
 			{
-				System.err.println("You entered a hid not listed above!");
+				System.out.println(rs.getString("category") +" \t "+ rs.getString("hid") + " \t "+ rs.getString("averageCost")); 
+			}
+		}
+		catch(Exception e)
+		{
+			//System.err.println(e.getMessage());
+			System.err.println("cannot execute the query");
+		}
+		
+		
+		String mostHighlyRatedTHByCategory="Select category, hid , averageCost from (SELECT V.hid, TH.Category , avg(V.cost) as averageCost, @category_rank := IF(@current_category = TH.Category, @category_rank + 1, 1) AS category_count, @current_category := TH.category FROM Visit V join TH on (V.hid = TH.hid) group by category , hid order by averageCost desc) as sub where category_count <= "+listSize+";";
+		try
+		{
+			rs=stmt.executeQuery(mostHighlyRatedTHByCategory);
+			
+			if(!rs.last())
+			{
+				System.out.println("No house has been visited by any registered categories.");
+				return;
+			}
+			rs.beforeFirst();
+			
+			System.out.println(listSize + " best rated THs by category.");
+			System.out.println();
+			System.out.println("[category] \t [hid] \t [averageCost]");
+			while (rs.next())
+			{
+				System.out.println(rs.getString("category") +" \t "+ rs.getString("hid") + " \t "+ rs.getString("averageCost")); 
 			}
 		}
 		catch(Exception e)
