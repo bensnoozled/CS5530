@@ -35,7 +35,7 @@ public class Browse {
 		String keyword;
 		String category;
 		int sort = 0;
-		String sql = "SELECT * FROM TH T, Available A, HasKeywords H, Keywords K ";
+		String sql = "SELECT * FROM TH T NATURAL JOIN (SELECT AVG(score) as averageFeedback, hid from Feedback group by hid) F1 NATURAL JOIN (SELECT AVG(score) as trustedAverage FROM Trust T, Feedback F where T.login2 = F.login and T.isTrusted = 1) as F2, Available A, HasKeywords H, Keywords K ";
 
 		try{low = Float.parseFloat(readInput("Enter a low price or a for no limit"));}catch (Exception e){System.err.println("Invalid price input.");}
 		try{high = Float.parseFloat(readInput("Enter a high price or enter for no limit"));}catch (Exception e){System.err.println("Invalid price input.");}
@@ -68,9 +68,11 @@ public class Browse {
 		}
 
 		if(sort == 1)
-			sql = sql + "ORDER BY A.pricePerNight";
+			sql = sql + " ORDER BY A.pricePerNight";
 		if(sort == 2)
-			sql = sql + "ORDER BY A.pricePerNight";
+			sql = sql + " ORDER BY F2.averageFeedback";
+		if(sort == 3)
+			sql = sql + " ORDER BY F2.trustedFeedback";
 		try{
 			rs=stmt.executeQuery(sql);
 			System.out.println("Category Address pid pricePerNight hid wid Word language");
@@ -85,6 +87,8 @@ public class Browse {
 				sr.wid= rs.getString("wid");
 				sr.word= rs.getString("word");
 				sr.language= rs.getString("language");
+				sr.averageFeedback = rs.getString("averageFeedback");
+				sr.trustedFeedback = rs.getString("trustedAverage");
 				sr.print();
 
 			}
@@ -152,9 +156,11 @@ class searchResult
 			String wid;
 			String word;
 			String language;
+			String averageFeedback;
+			String trustedFeedback;
 
 			void print(){
-				System.out.println(category + " " + address + " " + pid + " " + pricePerNight + " " + hid + " " + wid  + " " + word + " " + language);
+				System.out.println(category + " " + address + " " + pid + " " + pricePerNight + " " + hid + " " + wid  + " " + word + " " + language + " " + averageFeedback + " " + trustedFeedback);
 
 			}
 
