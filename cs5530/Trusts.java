@@ -21,7 +21,7 @@ public class Trusts
 			
 			if(!rs.last())
 			{
-				System.err.println("There aren't any houses registered you haven't favorited!");
+				System.err.println("There aren't any other users besides you that are registered!");
 				return;
 			}
 			rs.beforeFirst();
@@ -41,16 +41,16 @@ public class Trusts
 			
 			if(logins.contains(choice))
 			{
-				boolean trust;
-				try{int c = Integer.parseInt(readInput("Enter 0 to Not Trust or 1 to Trust: " + choice)) ; if(c < 0 || c > 1){throw new Exception();}else{trust = (c == 1 ? true : false);} }catch (Exception e){ System.err.println("Invalid trust input. Input a single 0 or 1."); return;}
+				int trust;
+				try{ trust = Integer.parseInt(readInput("Enter -1 to Not Trust , 0 to stay Neutral, or 1 to Trust: " + choice)) ; if(trust < -1 || trust > 1){throw new Exception();}}catch(Exception e){System.err.println("Enter -1,0,1 next time."); return;}
 				//Trust entry is already in database
 				if(stmt.executeQuery("Select * from Trust where login1 = '"+usr.m_login+"' and login2 = '"+choice+"'").last())
 				{
-					stmt.executeUpdate("Update Trust Set isTrusted = " +trust+ " where login1 = '"+usr.m_login+"' and login2 = '"+choice+"';");
+					stmt.executeUpdate("Update Trust Set isTrusted = " + trust + " where login1 = '"+usr.m_login+"' and login2 = '"+choice+"';");
 				}
 				else
 				{
-					String updateFavorites = "Insert into Trust(login1,login2,isTrusted) values ('"+usr.m_login+"', '"+choice+"' , "+trust+");";
+					String updateFavorites = "Insert into Trust(login1,login2,isTrusted) values ('"+usr.m_login+"', '"+choice+"' , "+ trust +");";
 					stmt.executeUpdate(updateFavorites);
 				}
 			}

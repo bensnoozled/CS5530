@@ -33,7 +33,11 @@ public class testdriver2
 		cs5530.Trusts trust = new cs5530.Trusts();
 		cs5530.Reservation res = new cs5530.Reservation();
 		cs5530.Stay stay = new cs5530.Stay();
+<<<<<<< HEAD
 		cs5530.Browse browse = new cs5530.Browse();
+=======
+		cs5530.Statistics stats = new Statistics();
+>>>>>>> 2546be896420a78842c009a503eca364e9bdf88f
 		String sql=null;
 		int c=0;
 		try
@@ -126,8 +130,7 @@ public class testdriver2
 						}
 						case 4:
 						{
-
-							res.createReservation(user, con.stmt);
+							res.createReservation(user, th , con.stmt);
 
 							break;
 						}
@@ -163,13 +166,20 @@ public class testdriver2
 						}
 						case 11:
 						{
-							browse.browse(user, con.stmt);
+							stats.getStats(user, con.stmt);
+							break;
+						}
+						case 12:
+						{
+							stats.getUserStats(user, con.stmt);
+							break;
 						}
 
 						default:
 						{
-							System.out.println("EoM");
+							System.out.println("Invalid option, goodbye!");
 							con.stmt.close();
+							System.exit(-1);
 							break;
 						}
 					}
@@ -214,13 +224,15 @@ public class testdriver2
 		System.out.println("1. Enter your own query");
 		System.out.println("2. Register a new TH");
 		System.out.println("\t3. Update a TH you own");
-		System.out.println("4. Make a reservation");
+		System.out.println("4. Make a reservation (get suggestions on THs you should reserve)");
 		System.out.println("5. Favorite a TH");
 		System.out.println("6. Leave Feedback on a TH");
 		System.out.println("\t7. Leave a rating on a Feedback");
 		System.out.println("8. Trust or Distrust another User.");
 		System.out.println("9. Get the (N) most useful feedbacks on a TH");
 		System.out.println("10. Log a stay for a reserved TH");
+		System.out.println("11. Get Statistics about registed THs");
+		System.out.println("12. Get Statistics about users (to reward them!)");
 		System.out.println("");
 	}
 	

@@ -138,29 +138,32 @@ public class TH
 		}
 	}
 	
-	public void suggestTH(User usr, Statement stmt)
+	public void suggestTH(User usr, int hid , Statement stmt)
 	{
 		ResultSet rs;
-		String suggestTH="SELECT hid , category FROM TH where login = '" + usr.m_login + "' ";
+		String suggestTH="Select hid, category ,visitCount from (Select hid, count(hid) as visitCount from Visit where hid != "+hid+" and login in (Select login from Visit where hid = "+hid+") group by hid) as suggested natural join TH order by visitCount desc";
 		try
 		{
 			rs = stmt.executeQuery(suggestTH);
 			
 			if(!rs.last())
 			{
-				System.err.println("The feedbacks for this house have never been rated!");
+				System.out.println("No houses to suggest");
 				return;
 			}
 			rs.beforeFirst();
 			
-			System.out.println("[text] \t [Average Rating]");
+			System.out.println("(Suggestion) Have you tried reserving these THs?");
+			
+			System.out.println("[hid] \t [category] \t [visitCount]");
 			while (rs.next())
 			{
-				System.out.println(rs.getString("text") +" \t "+ rs.getString("avgRating")); 
+				System.out.println(rs.getString("hid") +" \t "+ rs.getString("category") + " \t " + rs.getString("visitCount")); 
 			}
 		}
 		catch(Exception e)
 		{
+			System.err.println(e.getMessage());
 			System.err.println("cannot execute the query");
 		}
 	}
