@@ -33,6 +33,7 @@ public class testdriver2
 		cs5530.Trusts trust = new cs5530.Trusts();
 		cs5530.Reservation res = new cs5530.Reservation();
 		cs5530.Stay stay = new cs5530.Stay();
+		cs5530.Statistics stats = new Statistics();
 		String sql=null;
 		int c=0;
 		try
@@ -159,6 +160,11 @@ public class testdriver2
 							stay.addStay(user, con.stmt);
 							break;
 						}
+						case 11:
+						{
+							stats.getStats(user, con.stmt);
+							break;
+						}
 
 						default:
 						{
@@ -215,6 +221,7 @@ public class testdriver2
 		System.out.println("8. Trust or Distrust another User.");
 		System.out.println("9. Get the (N) most useful feedbacks on a TH");
 		System.out.println("10. Log a stay for a reserved TH");
+		System.out.println("11. Get Statistics about registed THs");
 		System.out.println("");
 	}
 	

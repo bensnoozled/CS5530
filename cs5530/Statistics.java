@@ -43,7 +43,7 @@ public class Statistics
 			System.err.println("cannot execute the query");
 		}
 		
-		String mostExpensiveHousesByCategory="Select category, hid , averageCost from (SELECT V.hid, TH.Category , avg(V.cost) as averageCost, @category_rank := IF(@current_category = TH.Category, @category_rank + 1, 1) AS category_count, @current_category := TH.category FROM Visit V join TH on (V.hid = TH.hid) group by category , hid order by averageCost desc) as sub where category_count <= "+listSize+";";
+		String mostExpensiveHousesByCategory="Select category, hid , averageCost from (SELECT hid, Category , averageCost, @rank := IF(@currentC = Category, @rank + 1, 1) AS category_count, @currentC := Category FROM (Select V.hid, TH.Category , avg(V.cost) as averageCost from Visit V join TH on (V.hid = TH.hid) group by category , hid order by category desc, averageCost desc) as realQ) as sub where category_count <= "+listSize+";";
 		try
 		{
 			rs=stmt.executeQuery(mostExpensiveHousesByCategory);
@@ -62,6 +62,7 @@ public class Statistics
 			{
 				System.out.println(rs.getString("category") +" \t "+ rs.getString("hid") + " \t "+ rs.getString("averageCost")); 
 			}
+			stmt.executeQuery("Select @rank := 1;");
 		}
 		catch(Exception e)
 		{
@@ -69,8 +70,7 @@ public class Statistics
 			System.err.println("cannot execute the query");
 		}
 		
-		
-		String mostHighlyRatedTHByCategory="Select category, hid , averageCost from (SELECT V.hid, TH.Category , avg(V.cost) as averageCost, @category_rank := IF(@current_category = TH.Category, @category_rank + 1, 1) AS category_count, @current_category := TH.category FROM Visit V join TH on (V.hid = TH.hid) group by category , hid order by averageCost desc) as sub where category_count <= "+listSize+";";
+		String mostHighlyRatedTHByCategory="Select category, hid , averageScore  from (SELECT hid, Category , averageScore, @rank := IF(@currentC = Category, @rank + 1, 1) AS category_count, @currentC := Category FROM (Select V.hid, TH.Category , avg(V.score) as averageScore from Feedback V join TH on (V.hid = TH.hid) group by category, hid order by category desc , averageScore desc) as realQ) as sub where category_count <= "+listSize+";";
 		try
 		{
 			rs=stmt.executeQuery(mostHighlyRatedTHByCategory);
@@ -84,15 +84,16 @@ public class Statistics
 			
 			System.out.println(listSize + " best rated THs by category.");
 			System.out.println();
-			System.out.println("[category] \t [hid] \t [averageCost]");
+			System.out.println("[category] \t [hid] \t [averageScore]");
 			while (rs.next())
 			{
-				System.out.println(rs.getString("category") +" \t "+ rs.getString("hid") + " \t "+ rs.getString("averageCost")); 
+				System.out.println(rs.getString("category") +" \t "+ rs.getString("hid") + " \t "+ rs.getString("averageScore")); 
 			}
+			stmt.executeQuery("Select @rank := 1;");
 		}
 		catch(Exception e)
 		{
-			//System.err.println(e.getMessage());
+			System.err.println(e.getMessage());
 			System.err.println("cannot execute the query");
 		}
 	}
