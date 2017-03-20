@@ -75,7 +75,8 @@ public class Browse {
 			sql = sql + " ORDER BY F2.trustedFeedback";
 		try{
 			rs=stmt.executeQuery(sql);
-			System.out.println("Category Address pid pricePerNight hid wid Word language");
+			System.out.format("%32s  %32s  %4s  %5s  %4s  %4s  %16s  %16s  %5s  %5s\n", "Category", "Address", "pid", "pricePerNight", "hid", "wid", "Word", "language", "Average Feedback", "Trusted Average");
+			System.out.println(new String(new char[170]).replace('\0', '-'));
 			while (rs.next())
 			{
 				searchResult sr = new searchResult();
@@ -160,7 +161,7 @@ class searchResult
 			String trustedFeedback;
 
 			void print(){
-				System.out.println(category + " " + address + " " + pid + " " + pricePerNight + " " + hid + " " + wid  + " " + word + " " + language + " " + averageFeedback + " " + trustedFeedback);
+				System.out.format("%32s  %32s  %4s  %5s  %4s  %4s  %16s  %16s  %5s  %5s\n", category, address, pid, pricePerNight, hid, wid, word, language, averageFeedback, trustedFeedback);
 
 			}
 

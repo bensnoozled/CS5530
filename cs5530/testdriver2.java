@@ -35,6 +35,7 @@ public class testdriver2
 		cs5530.Stay stay = new cs5530.Stay();
 		cs5530.Browse browse = new cs5530.Browse();
 		cs5530.Statistics stats = new Statistics();
+		cs5530.Separation separation = new Separation();
 
 		String sql=null;
 		int c=0;
@@ -177,6 +178,11 @@ public class testdriver2
 							browse.browse(user, con.stmt);
 							break;
 						}
+						case 14:
+						{
+							separation.separation(user, con.stmt);
+							break;
+						}
 
 						default:
 						{
@@ -237,6 +243,7 @@ public class testdriver2
 		System.out.println("11. Get Statistics about registed THs");
 		System.out.println("12. Get Statistics about users (to reward them!)");
 		System.out.println("13. Search for a TH");
+		System.out.println("14. Find degrees of separation");
 		System.out.println("");
 	}
 	
