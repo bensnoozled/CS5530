@@ -165,11 +165,16 @@ public class testdriver2
 							stats.getStats(user, con.stmt);
 							break;
 						}
-
+						case 12:
+						{
+							stats.getUserStats(user, con.stmt);
+							break;
+						}
 						default:
 						{
-							System.out.println("EoM");
+							System.out.println("Invalid option, goodbye!");
 							con.stmt.close();
+							System.exit(-1);
 							break;
 						}
 					}
@@ -222,6 +227,7 @@ public class testdriver2
 		System.out.println("9. Get the (N) most useful feedbacks on a TH");
 		System.out.println("10. Log a stay for a reserved TH");
 		System.out.println("11. Get Statistics about registed THs");
+		System.out.println("12. Get Statistics about users (to reward them!)");
 		System.out.println("");
 	}
 	

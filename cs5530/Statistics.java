@@ -98,6 +98,65 @@ public class Statistics
 		}
 	}
 	
+	public void getUserStats(User usr, Statement stmt)
+	{
+		int listSize;
+		try{listSize = Integer.parseInt(readInput("Enter the amount list size for the following statistics (m)"));}catch (Exception e){ System.err.println("Invalid list size input."); return;}
+		
+		ResultSet rs;
+		String mostTrustedUsers="SELECT login2 , sum(isTrusted) as karma from Trust group by login2 order by karma desc limit "+listSize+";";
+		try
+		{
+			rs=stmt.executeQuery(mostTrustedUsers);
+			
+			if(!rs.last())
+			{
+				System.out.println("No users have a trust rating.");
+				return;
+			}
+			rs.beforeFirst();
+			
+			System.out.println(listSize + " most popular THs by category.");
+			System.out.println();
+			System.out.println("[login] \t [trustRating]");
+			while (rs.next())
+			{
+				System.out.println(rs.getString("login2") +" \t "+ rs.getString("karma")); 
+			}
+		}
+		catch(Exception e)
+		{
+			//System.err.println(e.getMessage());
+			System.err.println("cannot execute the query");
+		}
+		
+		String bestFeedbackUsers="Select F.login , avg(R.rating) as averageRating from (Rates R join Feedback F on R.fid = F.fid) group by F.login order by averageRating desc limit "+listSize+";";
+		try
+		{
+			rs=stmt.executeQuery(bestFeedbackUsers);
+			
+			if(!rs.last())
+			{
+				System.out.println("No user has rated another user's feedback.");
+				return;
+			}
+			rs.beforeFirst();
+			
+			System.out.println(listSize + " most popular THs by category.");
+			System.out.println();
+			System.out.println("[login] \t [averageFeedbackRating]");
+			while (rs.next())
+			{
+				System.out.println(rs.getString("login") +" \t "+ rs.getString("averageRating")); 
+			}
+		}
+		catch(Exception e)
+		{
+			//System.err.println(e.getMessage());
+			System.err.println("cannot execute the query");
+		}
+	}
+	
 	public static String readInput(String message)
 	{
 		System.out.println(message);
