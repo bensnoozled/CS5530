@@ -75,6 +75,7 @@ public class Reservation{
 		try{hid = Integer.parseInt(readInput("Enter desired HID number for your reservation"));}catch (Exception e){ c = -1; }
 		String output = "";
 		ResultSet rs = null;
+		ResultSet rs1 = null;
 
 
 		String startDate = readInput("Enter desired start date.\nMust be in the format of yyyy-MM-dd");
@@ -122,13 +123,20 @@ public class Reservation{
 					c = Integer.parseInt(readInput("Dates availiable! Do you wish to proceed with reservation creation? " +
 							"The following reservation will be made:\n" +
 							"From " + startDate + " to " + endDate + " for housing number " + hid + "\n 1: yes\n2: no"));
-					String periodSql = "INSERT INTO `Period` (`from`, `to`) VALUES ('" + startDate + "', '" + endDate + "');\n";
+
+					String sqlCheck = "SELECT COUNT(pid) as count FROM Period WHERE `from` = DATE_FORMAT('" + startDate + "', '%Y-%c-%d' ) and `to` = DATE_FORMAT('" + endDate + "', '%Y-%c-%d')";
+					rs1 = stmt.executeQuery(sqlCheck);
+					if(rs1.getString("count") != "0" )
+					{
+						String periodSql = "INSERT INTO `Period` (`from`, `to`) VALUES ('" + startDate + "', '" + endDate + "')";
+						stmt.executeUpdate(periodSql);
+					}
 					String reservationSql = "INSERT INTO `5530db40`.`Reserve` (`login`, `hid`, `pid`, `cost`) VALUES (" + user.m_login + ", 1, (SELECT pid from Period WHERE `from` = DATE_FORMAT('" + startDate + "', '%Y-%c-%d' ) and `to` = DATE_FORMAT('" + endDate + "', '%Y-%c-%d')), (SELECT pricePerNight FROM Available WHERE hid = " + hid + "));";
 
 					if(c == 1)
 					{
 						int result;
-						stmt.executeUpdate(periodSql);
+
 						result=stmt.executeUpdate(reservationSql);
 
 						if(result > 0)

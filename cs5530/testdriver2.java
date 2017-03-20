@@ -33,6 +33,7 @@ public class testdriver2
 		cs5530.Trusts trust = new cs5530.Trusts();
 		cs5530.Reservation res = new cs5530.Reservation();
 		cs5530.Stay stay = new cs5530.Stay();
+		cs5530.Browse browse = new cs5530.Browse();
 		String sql=null;
 		int c=0;
 		try
@@ -159,6 +160,10 @@ public class testdriver2
 						{
 							stay.addStay(user, con.stmt);
 							break;
+						}
+						case 11:
+						{
+							browse.browse(user, con.stmt);
 						}
 
 						default:

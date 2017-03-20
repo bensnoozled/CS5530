@@ -83,7 +83,7 @@ public class Stay {
 				result=stmt.executeUpdate(sql);
 				if(result > 0)
 				{
-					System.out.println("Stay successfully recorded");
+					System.out.println("Stay successfully recorded!");
 					return true;
 				}
 				else
