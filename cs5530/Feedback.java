@@ -57,7 +57,7 @@ public class Feedback
 				String text = readInput("Any comment on this TH?");
 				java.sql.Date date = new java.sql.Date(new java.util.Date().getTime());
 				
-				String updateFeedback = "Insert into Feedback (text,fbdate,hid,login) values (?,?,?,?,?)";
+				String updateFeedback = "Insert into Feedback (text,fbdate,hid,login,score) values (?,?,?,?,?)";
 				PreparedStatement ps = con.prepareStatement(updateFeedback);
 				ps.setString(1, text);
 				ps.setDate(2, date);

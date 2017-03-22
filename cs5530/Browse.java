@@ -37,7 +37,7 @@ public class Browse {
 		int sort = 0;
 		String sql = "SELECT * FROM TH T NATURAL JOIN (SELECT AVG(score) as averageFeedback, hid from Feedback group by hid) F1 NATURAL JOIN (SELECT AVG(score) as trustedAverage FROM Trust T, Feedback F where T.login2 = F.login and T.isTrusted = 1) as F2, Available A, HasKeywords H, Keywords K ";
 
-		try{low = Float.parseFloat(readInput("Enter a low price or a for no limit"));}catch (Exception e){System.err.println("Invalid price input.");}
+		try{low = Float.parseFloat(readInput("Enter a low price or press enter for no limit"));}catch (Exception e){System.err.println("Invalid price input.");}
 		try{high = Float.parseFloat(readInput("Enter a high price or enter for no limit"));}catch (Exception e){System.err.println("Invalid price input.");}
 		address = readInput("Enter a city, state, or enter for no preference");
 		keyword = readInput("Enter a keyword or enter for no preference");

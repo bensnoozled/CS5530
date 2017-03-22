@@ -80,7 +80,7 @@ public class FeedbackRating
 		String temp = "";
 		try
 		{
-			while ((temp = in.readLine()) == null && temp.length() == 0) ;
+			while ((temp = in.readLine()) == null && temp.length() == 0);
 		}
 		catch(Exception e)
 		{
