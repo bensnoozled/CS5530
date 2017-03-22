@@ -31,10 +31,10 @@ public class Statistics
 			
 			System.out.println(listSize + " most popular THs by category.");
 			System.out.println();
-			System.out.println("[category] \t [hid] \t [visitCount]");
+			System.out.format("%32s %5s %12s %n", "[category]", "[hid]" , "[visitCount]");
 			while (rs.next())
 			{
-				System.out.println(rs.getString("category") +" \t "+ rs.getString("hid") + " \t "+ rs.getString("visitCount")); 
+				System.out.format("%32s %5s %12s %n", rs.getString("category") , rs.getString("hid") , rs.getString("visitCount")); 
 			}
 		}
 		catch(Exception e)
@@ -57,10 +57,10 @@ public class Statistics
 			
 			System.out.println(listSize + " most expensive THs by category.");
 			System.out.println();
-			System.out.println("[category] \t [hid] \t [averageCost]");
+			System.out.format("%32s %5s %15s %n", "[category]", "[hid]" , "[averageCost]");
 			while (rs.next())
 			{
-				System.out.println(rs.getString("category") +" \t "+ rs.getString("hid") + " \t "+ rs.getString("averageCost")); 
+				System.out.format("%32s %5s %15s %n", rs.getString("category") , rs.getString("hid") , rs.getString("averageCost")); 
 			}
 			stmt.executeQuery("Select @rank := 1;");
 		}
@@ -80,14 +80,14 @@ public class Statistics
 				System.out.println("No house has been visited by any registered categories.");
 				return;
 			}
-			rs.beforeFirst();
+			rs.first();
 			
 			System.out.println(listSize + " best rated THs by category.");
 			System.out.println();
-			System.out.println("[category] \t [hid] \t [averageScore]");
+			System.out.format("%32s %5s %14s %n", rs.getString("category") , rs.getString("hid") , rs.getString("averageScore")); 
 			while (rs.next())
 			{
-				System.out.println(rs.getString("category") +" \t "+ rs.getString("hid") + " \t "+ rs.getString("averageScore")); 
+				System.out.format("%32s %5s %14s %n", rs.getString("category") , rs.getString("hid") , rs.getString("averageScore")); 
 			}
 			stmt.executeQuery("Select @rank := 1;");
 		}
@@ -118,10 +118,10 @@ public class Statistics
 			
 			System.out.println(listSize + " most popular THs by category.");
 			System.out.println();
-			System.out.println("[login] \t [trustRating]");
+			System.out.format("%20s %13s %n","[login]", "[trustRating]");
 			while (rs.next())
 			{
-				System.out.println(rs.getString("login2") +" \t "+ rs.getString("karma")); 
+				System.out.format("%20s %13s %n", rs.getString("login2"), rs.getString("karma")); 
 			}
 		}
 		catch(Exception e)
@@ -144,10 +144,10 @@ public class Statistics
 			
 			System.out.println(listSize + " most popular THs by category.");
 			System.out.println();
-			System.out.println("[login] \t [averageFeedbackRating]");
+			System.out.format("%20s %15s %n","[login]", "[averageRating]");
 			while (rs.next())
 			{
-				System.out.println(rs.getString("login") +" \t "+ rs.getString("averageRating")); 
+				System.out.format("%20s %15s %n", rs.getString("login"), rs.getString("averageRating")); 
 			}
 		}
 		catch(Exception e)
