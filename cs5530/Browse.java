@@ -37,8 +37,8 @@ public class Browse {
 		int sort = 0;
 		String sql = "SELECT * FROM TH T NATURAL JOIN (SELECT AVG(score) as averageFeedback, hid from Feedback group by hid) F1 NATURAL JOIN (SELECT AVG(score) as trustedAverage FROM Trust T, Feedback F where T.login2 = F.login and T.isTrusted = 1) as F2, Available A, HasKeywords H, Keywords K ";
 
-		try{low = Float.parseFloat(readInput("Enter a low price or a for no limit"));}catch (Exception e){System.err.println("Invalid price input.");}
-		try{high = Float.parseFloat(readInput("Enter a high price or enter for no limit"));}catch (Exception e){System.err.println("Invalid price input.");}
+		try{low = Float.parseFloat(readInput("Enter a low price or 0 for no limit"));}catch (Exception e){System.err.println("Invalid price input.");}
+		try{high = Float.parseFloat(readInput("Enter a high price or 0 for no limit"));}catch (Exception e){System.err.println("Invalid price input.");}
 		address = readInput("Enter a city, state, or enter for no preference");
 		keyword = readInput("Enter a keyword or enter for no preference");
 		category = readInput("Enter a category or enter for no preference");
@@ -51,20 +51,27 @@ public class Browse {
 			sql = sql + " A.pricePerNight > low ";
 		if(high > 0)
 		{
-			if(high>low)
-				sql = sql + "and A.pricePerNight < high ";
+			if(low > 0 )
+				sql = sql + "and  ";
+			sql = sql + "and A.pricePerNight < high ";
 		}
 		if(address.length() > 0)
 		{
-			sql = sql + "and  ";
+			if(low > 0 || high > 0)
+				sql = sql + "and  ";
+			sql = sql + "T.address LIKE '%" + address + "%'";
 		}
 		if(keyword .length() > 0)
 		{
-			sql = sql + "and  ";
+			if(address.length()> 0 )
+				sql = sql + "and  ";
+			sql = sql + " K.word ='" + keyword + "' and T.hid = H.hid";
 		}
 		if(category .length() > 0)
 		{
-			sql = sql + "and A.pricePerNight < high ";
+			if(address.length()> 0 || keyword.length()>0)
+				sql = sql + "and  ";
+			sql = sql + " A.pricePerNight < " + high;
 		}
 
 		if(sort == 1)
@@ -75,7 +82,7 @@ public class Browse {
 			sql = sql + " ORDER BY F2.trustedFeedback";
 		try{
 			rs=stmt.executeQuery(sql);
-			System.out.format("%32s  %32s  %4s  %5s  %4s  %4s  %16s  %16s  %5s  %5s\n", "Category", "Address", "pid", "pricePerNight", "hid", "wid", "Word", "language", "Average Feedback", "Trusted Average");
+			System.out.format("%32s  %32s  %4s  %16s  %4s  %4s  %16s  %16s  %7s  %7s\n", "Category", "Address", "pid", "pricePerNight", "hid", "wid", "Word", "language", "Average Feedback", "Trusted Average");
 			System.out.println(new String(new char[170]).replace('\0', '-'));
 			while (rs.next())
 			{
@@ -161,7 +168,7 @@ class searchResult
 			String trustedFeedback;
 
 			void print(){
-				System.out.format("%32s  %32s  %4s  %5s  %4s  %4s  %16s  %16s  %5s  %5s\n", category, address, pid, pricePerNight, hid, wid, word, language, averageFeedback, trustedFeedback);
+				System.out.format("%32s  %32s  %4s  %16s  %4s  %4s  %16s  %16s  %15s  %15s%n", category, address, pid, pricePerNight, hid, wid, word, language, averageFeedback, trustedFeedback);
 
 			}
 

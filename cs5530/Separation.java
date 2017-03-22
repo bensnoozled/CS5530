@@ -4,18 +4,6 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by ben on 3/20/17.
