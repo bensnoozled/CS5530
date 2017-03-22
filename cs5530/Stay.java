@@ -41,7 +41,7 @@ public class Stay {
 			while (rs.next())
 			{
 				cs5530.Reservation res = new cs5530.Reservation();
-				res.setM_cost(Float.parseFloat(rs.getString("cost")));
+				try{res.setM_cost(Float.parseFloat(rs.getString("cost")));} catch(Exception e){res.setM_cost(0);}
 				res.setM_hid(Integer.parseInt(rs.getString("hid")));
 				res.setM_pid (Integer.parseInt(rs.getString("pid")));
 				res.setM_start(rs.getString("from"));
