@@ -63,7 +63,7 @@ public class User {
 		}
 		catch(Exception e)
 		{
-			System.err.println("Cannot execute the query.");
+			System.err.println("Enter a different login, login taken.");
 			return false;
 		}
 	}
