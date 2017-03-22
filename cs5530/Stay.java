@@ -28,13 +28,14 @@ public class Stay {
 	public boolean addStay(cs5530.User user, Statement stmt) {
 		int hid = 0;
 		int c = 1;
-		String selection = "";
+		String pidIn = "";
+		String hidIn = "";
 		ResultSet rs = null;
 
 		HashMap<String, cs5530.Reservation> reservations = new HashMap<String, cs5530.Reservation>();
 
 		String sql = "Select * from Reserve R, Period P where login = '" + user.getM_login() + "' and R.pid = P.pid";
-		System.out.println("Please select using pid from your available reservations: ");
+		System.out.println("Please select using pid and hid from your available reservations: ");
 		try{
 			rs=stmt.executeQuery(sql);
 			while (rs.next())
@@ -46,7 +47,7 @@ public class Stay {
 				res.setM_start(rs.getString("from"));
 				res.setM_end(rs.getString("to"));
 				System.out.println(res.print());
-				reservations.put(rs.getString("pid"), res);
+				reservations.put(rs.getString("pid") + rs.getString("hid"), res);
 			}
 
 			rs.close();
@@ -66,11 +67,12 @@ public class Stay {
 				System.out.println("cannot close resultset");
 			}
 		}
-		selection = readInput("Enter desired HID number for your stay");
+		pidIn = readInput("Enter desired PID number for your stay");
+		hidIn = readInput("Enter desired HID number for your stay");
 		try
 		{
 			cs5530.Reservation res = new cs5530.Reservation();
-			res = reservations.get(selection);
+			res = reservations.get(pidIn + hidIn);
 			DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH); //compute cost
 			Date startDate = format.parse(res.getM_start());
 			Date endDate = format.parse(res.getM_end());
@@ -94,7 +96,7 @@ public class Stay {
 			}
 			catch(Exception e)
 			{
-				System.err.println("Cannot execute the query.");
+				System.err.println("Cannot execute the query. Did you already log this stay?");
 				return false;
 			}
 		}
