@@ -78,9 +78,9 @@ public class Browse {
 		if(sort == 1)
 			sql = sql + " ORDER BY A.pricePerNight";
 		if(sort == 2)
-			sql = sql + " ORDER BY F2.averageFeedback";
+			sql = sql + " ORDER BY averageFeedback";
 		if(sort == 3)
-			sql = sql + " ORDER BY F2.trustedFeedback";
+			sql = sql + " ORDER BY trustedFeedback";
 		try{
 			rs=stmt.executeQuery(sql);
 			System.out.format("%32s  %32s  %4s  %16s  %4s  %4s  %16s  %16s  %7s  %7s\n", "Category", "Address", "pid", "pricePerNight", "hid", "wid", "Word", "language", "Average Feedback", "Trusted Average");
@@ -106,6 +106,7 @@ public class Browse {
 		}
 		catch(Exception e)
 		{
+			System.err.println(e.getMessage());
 			System.out.println("cannot execute the query");
 		}
 		finally
