@@ -104,16 +104,11 @@ public class Reservation{
 				System.err.println(e);
 				System.out.println("cannot execute the query");
 			} finally {
-				try {
-					if (rs != null && !rs.isClosed())
-						rs.close();
-				} catch (Exception e) {
-					System.out.println("cannot close resultset");
-				}
+
 			}
 			if (output != "") {
 				try {
-					c = Integer.parseInt(readInput("A reservation exists for that date. Try again?\n 1: yes\n 2: no"));
+					c = Integer.parseInt(readInput("A reservation exists for that date. Try again?\n 1: yes\n 2:  no"));
 				} catch (Exception e) {
 					c = -1;
 					continue;
@@ -126,20 +121,25 @@ public class Reservation{
 
 					String sqlCheck = "SELECT COUNT(pid) as count FROM Period WHERE `from` = DATE_FORMAT('" + startDate + "', '%Y-%c-%d' ) and `to` = DATE_FORMAT('" + endDate + "', '%Y-%c-%d')";
 					rs1 = stmt.executeQuery(sqlCheck);
-					if(rs1.getString("count") != "0" )
-					{
-						String periodSql = "INSERT INTO `Period` (`from`, `to`) VALUES ('" + startDate + "', '" + endDate + "')";
-						stmt.executeUpdate(periodSql);
-					}
-					String reservationSql = "INSERT INTO `5530db40`.`Reserve` (`login`, `hid`, `pid`, `cost`) VALUES (" + user.m_login + ", 1, (SELECT pid from Period WHERE `from` = DATE_FORMAT('" + startDate + "', '%Y-%c-%d' ) and `to` = DATE_FORMAT('" + endDate + "', '%Y-%c-%d')), (SELECT pricePerNight FROM Available WHERE hid = " + hid + "));";
+
+						rs1.next();
+						String result = rs1.getString("count");
+						if (Integer.parseInt(result) == 0) {
+							String periodSql = "INSERT INTO `Period` (`from`, `to`) VALUES ('" + startDate + "', '" + endDate + "')";
+							stmt.executeUpdate(periodSql);
+						}
+
+
+
+					String reservationSql = "INSERT INTO `5530db40`.`Reserve` (`login`, `hid`, `pid`, `cost`) VALUES ('" + user.m_login + "', 1, (SELECT pid from Period WHERE `from` = DATE_FORMAT('" + startDate + "', '%Y-%c-%d' ) and `to` = DATE_FORMAT('" + endDate + "', '%Y-%c-%d')), (SELECT pricePerNight FROM Available WHERE hid = " + hid + "));";
 
 					if(c == 1)
 					{
-						int result;
+						int queryResult;
 
-						result=stmt.executeUpdate(reservationSql);
+						queryResult=stmt.executeUpdate(reservationSql);
 
-						if(result > 0)
+						if(queryResult > 0)
 						{
 							System.out.println("Reservation successfully made!");
 							return true;
