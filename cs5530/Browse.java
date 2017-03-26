@@ -49,30 +49,30 @@ public class Browse {
 			sql = sql + " WHERE ";
 
 		if(low > 0)
-			sql = sql + " A.pricePerNight > low ";
+			sql = sql + " A.pricePerNight > " + Float.toString(low);
 		if(high > 0)
 		{
 			if(low > 0 )
-				sql = sql + "and  ";
-			sql = sql + "and A.pricePerNight < high ";
+				sql = sql + " and ";
+			sql = sql + " A.pricePerNight < " + Float.toString(high);
 		}
 		if(address.length() > 0)
 		{
 			if(low > 0 || high > 0)
-				sql = sql + "and  ";
+				sql = sql + " and ";
 			sql = sql + "T.address LIKE '%" + address + "%'";
 		}
 		if(keyword .length() > 0)
 		{
 			if(address.length()> 0 )
-				sql = sql + "and  ";
+				sql = sql + " and ";
 			sql = sql + " K.word ='" + keyword + "' and T.hid = H.hid";
 		}
 		if(category .length() > 0)
 		{
 			if(address.length()> 0 || keyword.length()>0)
-				sql = sql + "and  ";
-			sql = sql + " A.pricePerNight < " + high;
+				sql = sql + " and ";
+			sql = sql + " T.category = '" + category + "'";
 		}
 
 		if(sort == 1)
@@ -80,7 +80,7 @@ public class Browse {
 		if(sort == 2)
 			sql = sql + " ORDER BY averageFeedback";
 		if(sort == 3)
-			sql = sql + " ORDER BY trustedFeedback";
+			sql = sql + " ORDER BY trustedAverage";
 		try{
 			rs=stmt.executeQuery(sql);
 			System.out.format("%32s  %32s  %4s  %16s  %4s  %4s  %16s  %16s  %7s  %7s\n", "Category", "Address", "pid", "pricePerNight", "hid", "wid", "Word", "language", "Average Feedback", "Trusted Average");

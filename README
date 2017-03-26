@@ -1,0 +1,10 @@
+CS5530 - Phase 2 - Group 40
+Ben Anderl, Monish Gupta
+
+Example user id's: test (password: test), bro (password: jones)
+
+Our design assumes that database security is not important. User information, 
+username and password, are not encrypted in the database. There are also
+some assumptions made when inputing data, for example all dates must be in the format
+yyyy-MM-dd. All input requirements are shown to the
+user in the prompt.
