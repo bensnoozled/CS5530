@@ -18,6 +18,7 @@ function check_all_fields(form_obj){
 
 <%
 String searchAttribute = request.getParameter("searchAttribute");
+String attributeValue = request.getParameter("attributeValue");
 if( searchAttribute == null ){
 %>
 	<p>Welcome to UTEL!</p>
@@ -40,8 +41,8 @@ if( searchAttribute == null ){
 
 } else {
 
-	String attributeValue = request.getParameter("attributeValue");
-//	Connector connector = new Connector();
+	attributeValue = request.getParameter("attributeValue");
+	Connector connector = new Connector();
 	String login = "";
 	String password = "";
 	String name = "";
@@ -57,8 +58,6 @@ if( searchAttribute == null ){
 	cs5530.Browse browse = new cs5530.Browse();
 	cs5530.Statistics stats = new Statistics();
 	cs5530.Separation separation = new Separation();
-
-
 %>  
 
   <p><b>Listing orders in JSP: </b><BR><BR>
@@ -67,7 +66,7 @@ if( searchAttribute == null ){
   <%//=order.getOrders(searchAttribute, attributeValue, connector.stmt)%> <BR><BR>
   
   <b>Alternate way (servlet method):</b> <BR><BR>
-<%=out.println( searchAttribute)%>
+<%=searchAttribute%>
 
 <%
 // connector.closeStatement();
