@@ -19,29 +19,35 @@ function check_all_fields(form_obj){
 <%
 String Username = (String)request.getParameter("Username");
 String Password = (String)request.getParameter("Password");
-if(Username == null || Password == null){
+String FullName = (String)request.getParameter("FullName");
+String Address = (String)request.getParameter("Address");
+if(Username == null || Password == null || FullName == null || Address == null)
+{
 
-	if(Username != null && Username.equals("invalid") && Password == null)
+	if(Username != null && Username.equals("invalidCreate") && Password == null && FullName == null && Address == null)
 	{
 		%>
-			<b>Incorrect Username or Password</b>
+			<b>Invalid or Taken login. Ensure all fields are filled.</b>
 		<% 
 	}
 	
 %>
-	<p>Welcome to UTEL!</p>
 
-<form action="login.jsp">
+
+<form action="newUser.jsp">
   	<fieldset>
-    <legend>Login:</legend>
+    <legend>Create a User:</legend>
     Login:<br>
     	<input type="text" name="Username" method=get><br>
     Password:<br>
     	<input type="password" name="Password" method=get><br><br>
+    Full Name:<br>
+    	<input type="text" name="FullName" method=get><br>
+    Address:<br>
+    	<input type="text" name="Address" method=get><br>	
     	<input type="submit" value="Submit">
   	</fieldset>
 </form>
-
   	
 <%-- </form>
 	Username:
@@ -63,14 +69,14 @@ else
 {
 	Connector con = new Connector();
 	cs5530.User user = new cs5530.User();
-	if(user.userLogin(Username, Password, con.stmt))
+	if(user.createUser(Username, Password, FullName , Address , con.stmt))
 	{
 		session.setAttribute("login", Username);
-		response.sendRedirect("menu.jsp");
+		response.sendRedirect("login.jsp");
 	}
 	else
 	{
-		response.sendRedirect("login.jsp?Username=invalid");
+		response.sendRedirect("newUser.jsp?Username=invalidCreate");
 	}
 	
 %>  
@@ -83,4 +89,4 @@ else
 }  // We are ending the braces for else here
 %>
 
-<BR><a href="newUser.jsp"> Create a User </a></p>
+<BR><a href="login.jsp"> Login as another User </a></p>
