@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * Created by ben on 3/6/17.
  */
 public class Reservation{
-	public Reservation(){};
+	Reservation(){};
 
 	public String getM_login() {
 		return m_login;

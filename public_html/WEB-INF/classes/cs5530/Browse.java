@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  * Created by ben on 3/6/17.
  */
 public class Browse {
-	public Browse(){};
+	Browse(){};
 	static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 	String m_login;
 	int m_hid;

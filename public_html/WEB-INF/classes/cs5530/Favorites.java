@@ -11,10 +11,10 @@ public class Favorites
 	
 	public Favorites(){}
 	
-	public void addFavorite(User usr, Statement stmt)
+	public String addFavorite(String login , Integer choice , StringBuilder output, Integer stage, Statement stmt)
 	{
 		ResultSet rs;
-		String allNonFavHouses="SELECT * from TH where hid not in (Select hid from Favorites where login = '"+usr.m_login+"') ;";
+		String allNonFavHouses="SELECT * from TH where hid not in (Select hid from Favorites where login = '"+login+"') ;";
 		try
 		{
 			rs=stmt.executeQuery(allNonFavHouses);
@@ -22,7 +22,7 @@ public class Favorites
 			if(!rs.last())
 			{
 				System.err.println("There aren't any houses registered you haven't favorited!");
-				return;
+				return null;
 			}
 			rs.beforeFirst();
 			
@@ -34,26 +34,34 @@ public class Favorites
 			while (rs.next())
 			{
 				hids.add(rs.getInt("hid"));
-				System.out.println(rs.getString("hid") +" \t "+ rs.getString("category")); 
+				output.append(rs.getString("hid") +" \t "+ rs.getString("category") + "\n"); 
 			}
 			
-			int choice;
-			try{choice = Integer.parseInt(readInput("Enter an hid to favorite"));}catch (Exception e){ System.err.println("Invalid hid input."); return;}
+			if(stage == 0)
+			{
+				return output.toString();
+			}
+			
+			//int choice;
+			//try{choice = Integer.parseInt(readInput("Enter an hid to favorite"));}catch (Exception e){ System.err.println("Invalid hid input."); return;}
 			
 			if(hids.contains(choice))
 			{
-				String updateFavorites = "Insert into Favorites (hid, login) values ("+choice+", '"+ usr.m_login +"')";
+				String updateFavorites = "Insert into Favorites (hid, login) values ("+choice+", '"+ login +"')";
 				stmt.executeUpdate(updateFavorites);
+				return "success";
 			}
 			else
 			{
 				System.err.println("You entered a hid not listed above!");
+				return null;
 			}
 		}
 		catch(Exception e)
 		{
 			//System.err.println(e.getMessage());
 			System.err.println("cannot execute the query");
+			return null;
 		}
 	}
 	
