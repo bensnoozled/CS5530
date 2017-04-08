@@ -11,7 +11,7 @@ public class Favorites
 	
 	public Favorites(){}
 	
-	public String addFavorite(String login , Integer choice , StringBuilder output, Integer stage, Statement stmt)
+	public String addFavorite(String login , Integer choice , String output, Integer stage, Statement stmt)
 	{
 		ResultSet rs;
 		String allNonFavHouses="SELECT * from TH where hid not in (Select hid from Favorites where login = '"+login+"') ;";
@@ -34,12 +34,12 @@ public class Favorites
 			while (rs.next())
 			{
 				hids.add(rs.getInt("hid"));
-				output.append(rs.getString("hid") +" \t "+ rs.getString("category") + "\n"); 
+				output += (rs.getString("hid") +"---"+ rs.getString("category") + "|"); 
 			}
 			
 			if(stage == 0)
 			{
-				return output.toString();
+				return output;
 			}
 			
 			//int choice;
