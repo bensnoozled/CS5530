@@ -35,7 +35,7 @@ else if(choice == null || score == null)
 	String registeredHouses = feedback.leaveFeedback(login , new Integer(-1) , new Integer(-1) , "" , "" , new Integer(0) , con.stmt, con.con);
 	String[] regHouses = registeredHouses.split("\\|");
 	
-	out.println("Select an hid to leave feedback on, give it a score from 1 - 10, and leave a comment if you want :) ");%> <BR> <%
+	out.println("Select an hid to leave feedback on, give it a score from 0 - 10, and leave a comment if you want :) ");%> <BR> <%
 	%> 
 	<BR>
 	<table>
@@ -63,7 +63,7 @@ else if(choice == null || score == null)
     			HID:<br>
     			<input type="number" name="HID" method=get><br>
     			Score:<br>
-    			<input type="number" name="score" method=get><br>
+    			<input type="number" name="score" min=0 max=10 method=get><br>
     			Comment (Optional):<br>
     			<input type="text" name="comment" method=get><br>
     		<input type="submit" value="Submit">

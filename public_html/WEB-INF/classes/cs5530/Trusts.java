@@ -11,10 +11,10 @@ public class Trusts
 	
 	public Trusts(){}
 	
-	public void modifyTrust(User usr, Statement stmt)
+	public String modifyTrust(String login , String choice, Integer trust , String output, Integer stage, Statement stmt)
 	{
 		ResultSet rs;
-		String allNonFavHouses="SELECT * from Users where login != '"+usr.m_login+"';";
+		String allNonFavHouses="SELECT * from Users where login != '"+login+"';";
 		try
 		{
 			rs=stmt.executeQuery(allNonFavHouses);
@@ -22,7 +22,7 @@ public class Trusts
 			if(!rs.last())
 			{
 				System.err.println("There aren't any other users besides you that are registered!");
-				return;
+				return null;
 			}
 			rs.beforeFirst();
 			
@@ -31,38 +31,47 @@ public class Trusts
 			System.out.println("Select a User to modify your trust with. Case Sensitive.");
 			System.out.println();
 			System.out.println("[login]");
+			
 			while (rs.next())
 			{
 				logins.add(rs.getString("login"));
-				System.out.println(rs.getString("login")); 
+				output+=(rs.getString("login") + "|"); 
 			}
 			
-			String choice = readInput("");
+			if(stage == 0)
+			{
+				return output;
+			}
+			
+			//String choice = readInput("");
 			
 			if(logins.contains(choice))
 			{
-				int trust;
-				try{ trust = Integer.parseInt(readInput("Enter -1 to Not Trust , 0 to stay Neutral, or 1 to Trust: " + choice)) ; if(trust < -1 || trust > 1){throw new Exception();}}catch(Exception e){System.err.println("Enter -1,0,1 next time."); return;}
+				//int trust;
+				//try{ trust = Integer.parseInt(readInput("Enter -1 to Not Trust , 0 to stay Neutral, or 1 to Trust: " + choice)) ; if(trust < -1 || trust > 1){throw new Exception();}}catch(Exception e){System.err.println("Enter -1,0,1 next time."); return;}
 				//Trust entry is already in database
-				if(stmt.executeQuery("Select * from Trust where login1 = '"+usr.m_login+"' and login2 = '"+choice+"'").last())
+				if(stmt.executeQuery("Select * from Trust where login1 = '"+login+"' and login2 = '"+choice+"'").last())
 				{
-					stmt.executeUpdate("Update Trust Set isTrusted = " + trust + " where login1 = '"+usr.m_login+"' and login2 = '"+choice+"';");
+					stmt.executeUpdate("Update Trust Set isTrusted = " + trust + " where login1 = '"+login+"' and login2 = '"+choice+"';");
 				}
 				else
 				{
-					String updateFavorites = "Insert into Trust(login1,login2,isTrusted) values ('"+usr.m_login+"', '"+choice+"' , "+ trust +");";
-					stmt.executeUpdate(updateFavorites);
+					String updateFavorites = "Insert into Trust(login1,login2,isTrusted) values ('"+login+"', '"+choice+"' , "+ trust +");";
+					stmt.executeUpdate(updateFavorites);	
 				}
+				return "success";
 			}
 			else
 			{
 				System.err.println("You entered a login not listed above!");
+				return null;
 			}
 		}
 		catch(Exception e)
 		{
 			//System.err.println(e.getMessage());
 			System.err.println("cannot execute the query");
+			return null;
 		}
 	}
 	
