@@ -15,18 +15,18 @@ public class FeedbackRating
 	
 	public FeedbackRating(){}
 	
-	public void rateFeedback(User usr, Statement stmt)
+	public String rateFeedback(String login , Integer choice, Integer score, String output, Integer stage, Statement stmt)
 	{
 		ResultSet rs;
-		String feedbackNotByUser="Select * from Feedback where login != '"+usr.m_login+"' and fid not in (Select F.fid from Feedback F, Rates R where F.fid = R.fid and R.login = '"+usr.m_login+"')";
+		String feedbackNotByUser="Select * from Feedback where login != '"+login+"' and fid not in (Select F.fid from Feedback F, Rates R where F.fid = R.fid and R.login = '"+login+"')";
 		try
 		{
 			rs=stmt.executeQuery(feedbackNotByUser);
 			
 			if(!rs.last())
 			{
-				System.err.println("There aren't any houses registered you haven't commented on!");
-				return;
+				//System.err.println("There aren't any houses registered you haven't commented on!");
+				return null;
 			}
 			rs.beforeFirst();
 			
@@ -38,37 +38,45 @@ public class FeedbackRating
 			while (rs.next())
 			{
 				fids.add(rs.getInt("fid"));
-				System.out.println(rs.getString("fid") +". \t "+ rs.getString("login") + ", on hid #" + rs.getString("hid") + ", said:\n" + rs.getString("text"));
-				System.out.println();
+				output += (rs.getString("fid") +"---"+ rs.getString("login") + "---" + rs.getString("hid") + "---" + rs.getString("text")+"|");
 			}
 			
-			int choice;
-			try{choice = Integer.parseInt(readInput("Enter an fid to rate feedback on"));}catch (Exception e){ System.err.println("Invalid hid input."); return;}
+			if(stage == 0)
+			{
+				return output;
+			}
+			
+			//int choice;
+			//try{choice = Integer.parseInt(readInput("Enter an fid to rate feedback on"));}catch (Exception e){ System.err.println("Invalid hid input."); return;}
 			
 			if(fids.contains(choice))
 			{
-				int score;
-				try{score = Integer.parseInt(readInput("Enter a score for this feedback from 0-2"));}catch (Exception e){ System.err.println("Invalid score input."); return;}
+				//int score;
+				//try{score = Integer.parseInt(readInput("Enter a score for this feedback from 0-2"));}catch (Exception e){ System.err.println("Invalid score input."); return;}
 				
 				if(score < 0 || score > 2)
 				{
 					System.err.println("Invalid score input. Make sure your score was from 0-2!");
-					return;
+					return null;
 				}
 
-				String updateFeedbackRating = "Insert into Rates (login,fid,rating) values ('"+usr.m_login+"', "+choice+" , "+score+")";
+				String updateFeedbackRating = "Insert into Rates (login,fid,rating) values ('"+login+"', "+choice+" , "+score+")";
 				
 				stmt.executeUpdate(updateFeedbackRating);
+				
+				return "success";
 			}
 			else
 			{
 				System.err.println("You entered a fid not listed above!");
+				return null;
 			}
 		}
 		catch(Exception e)
 		{
 			System.err.println(e.getMessage());
 			System.err.println("cannot execute the query");
+			return null;
 		}
 	}
 	

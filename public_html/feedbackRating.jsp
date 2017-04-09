@@ -20,9 +20,8 @@ function check_all_fields(form_obj){
 <%
 String login = (String)session.getAttribute("login");
 
-String choice = (String)request.getParameter("HID");
+String choice = (String)request.getParameter("FID");
 String score = (String)request.getParameter("score");
-String comment = (String)request.getParameter("comment");
 if(login == null)
 {
 	response.sendRedirect("login.jsp");
@@ -30,18 +29,20 @@ if(login == null)
 else if(choice == null || score == null)
 {
 	Connector con = new Connector();
-	cs5530.Feedback feedback = new cs5530.Feedback();
+	cs5530.FeedbackRating feedbackRating = new cs5530.FeedbackRating();
 	
-	String registeredHouses = feedback.leaveFeedback(login , new Integer(-1) , new Integer(-1) , "" , "" , new Integer(0) , con.stmt, con.con);
+	String registeredHouses = feedbackRating.rateFeedback(login , new Integer(-1), new Integer(-1), "" , 0 , con.stmt);
 	String[] regHouses = registeredHouses.split("\\|");
 	
-	out.println("Select an hid to leave feedback on, give it a score from 1 - 10, and leave a comment if you want :) ");%> <BR> <%
+	out.println("Select an fid to Rate, enter 0 for not useful , 1 for alright, 2 for excellent! Only enter a number from 0-2 into score.");%> <BR> <%
 	%> 
 	<BR>
 	<table>
 		<tr>
+    		<th>fid</th>
+    		<th>login</th>
     		<th>hid</th>
-    		<th>category</th>
+    		<th>comment</th>
  		</tr>
 	<%
 	for(int i = 0; i < regHouses.length; i++)
@@ -52,20 +53,20 @@ else if(choice == null || score == null)
 		  <tr>
 		    <td><%=rH[0]%></td>
 			<td><%=rH[1]%></td>
+			<td><%=rH[2]%></td>
+			<td><%=rH[3]%></td>
 		  </tr>
 		<%
 	}
 	
 	%>
-	<form action="feedback.jsp">
+	<form action="feedbackRating.jsp">
   		<fieldset>
     		<legend></legend>
-    			HID:<br>
-    			<input type="number" name="HID" method=get><br>
+    			FID:<br>
+    			<input type="number" name="FID" method=get value="0"><br>
     			Score:<br>
-    			<input type="number" name="score" method=get><br>
-    			Comment (Optional):<br>
-    			<input type="text" name="comment" method=get><br>
+    			<input type="number" name="score" method=get value="0"><br>
     		<input type="submit" value="Submit">
   		</fieldset>
 	</form>
@@ -74,29 +75,24 @@ else if(choice == null || score == null)
 else
 {
 	Connector con = new Connector();
-	cs5530.Feedback feedback = new cs5530.Feedback();
+	cs5530.FeedbackRating feedbackRating = new cs5530.FeedbackRating();
 	
-	if(comment == null)
-	{
-		comment = "";
-	}
+	String FBRStatus = feedbackRating.rateFeedback(login , Integer.parseInt(choice) , Integer.parseInt(score) , "" , new Integer(1) , con.stmt);
 	
-	String FBStatus = feedback.leaveFeedback(login , Integer.parseInt(choice) , Integer.parseInt(score) , comment , "" , new Integer(1) , con.stmt, con.con);
-	
-	if(FBStatus != null && FBStatus.equals("success"))
+	if(FBRStatus != null && FBRStatus.equals("success"))
 	{
 		%>
-		<b>Successfully left feedback on hid #<%=choice%></b>
+		<b>Successfully rated Feedback with fid #<%=choice%></b>
 		<%
 	}
 	else
 	{
 		%>
-		<b>Failed to leave feedback on HID.</b>
+		<b>Failed to rate feedback</b>
 		<%
 	}
 	%>
-		<BR><a href="feedback.jsp"> Leave Feedback on another TH </a></p>
+		<BR><a href="feedbackRating.jsp"> Rate another Feedback</a></p>
 	<%
 }
 %>
