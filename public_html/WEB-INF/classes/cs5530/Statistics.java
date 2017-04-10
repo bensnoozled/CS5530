@@ -11,94 +11,110 @@ public class Statistics
 	
 	public Statistics(){}
 	
-	public void getStats(User usr, Statement stmt)
+	public String getStats(Integer choice, Integer listSize , String output ,  Statement stmt)
 	{
-		int listSize;
-		try{listSize = Integer.parseInt(readInput("Enter the amount list size for the following statistics (m)"));}catch (Exception e){ System.err.println("Invalid list size input."); return;}
+		//int listSize;
+		//try{listSize = Integer.parseInt(readInput("Enter the amount list size for the following statistics (m)"));}catch (Exception e){ System.err.println("Invalid list size input."); return;}
 		
 		ResultSet rs;
-		String popTHByCategory="Select category, hid , visitCount from (SELECT V.hid, TH.Category , count(V.hid) as visitCount, @category_rank := IF(@current_category = TH.Category, @category_rank + 1, 1) AS category_count, @current_category := TH.category FROM (Select count(hid) as vc, login, hid , pid from Visit V group by login , hid, pid order by vc desc) as V join TH on (V.hid = TH.hid) group by category , hid order by visitCount desc) as sub where category_count <= "+listSize+";";
-		try
+		if(choice == 0)
 		{
-			rs=stmt.executeQuery(popTHByCategory);
-			
-			if(!rs.last())
+			String popTHByCategory="Select category, hid , visitCount from (SELECT V.hid, TH.Category , count(V.hid) as visitCount, @category_rank := IF(@current_category = TH.Category, @category_rank + 1, 1) AS category_count, @current_category := TH.category FROM (Select count(hid) as vc, login, hid , pid from Visit V group by login , hid, pid order by vc desc) as V join TH on (V.hid = TH.hid) group by category , hid order by visitCount desc) as sub where category_count <= "+listSize+";";
+			try
 			{
-				System.out.println("No house has been visited by any registered categories.");
-				return;
+				rs=stmt.executeQuery(popTHByCategory);
+				
+				if(!rs.last())
+				{
+					System.out.println("No house has been visited by any registered categories.");
+					return "none";
+				}
+				rs.beforeFirst();
+				
+				System.out.println(listSize + " most popular THs by category.");
+				System.out.println();
+				System.out.format("%32s %5s %12s %n", "[category]", "[hid]" , "[visitCount]");
+				while (rs.next())
+				{
+					output+=(rs.getString("category")+"---"+ rs.getString("hid")+"---"+rs.getString("visitCount")+"|"); 
+				}
+				
+				return output;
 			}
-			rs.beforeFirst();
-			
-			System.out.println(listSize + " most popular THs by category.");
-			System.out.println();
-			System.out.format("%32s %5s %12s %n", "[category]", "[hid]" , "[visitCount]");
-			while (rs.next())
+			catch(Exception e)
 			{
-				System.out.format("%32s %5s %12s %n", rs.getString("category") , rs.getString("hid") , rs.getString("visitCount")); 
+				//System.err.println(e.getMessage());
+				System.err.println("cannot execute the query");
+				return null;
 			}
 		}
-		catch(Exception e)
+		else if(choice == 1)
 		{
-			//System.err.println(e.getMessage());
-			System.err.println("cannot execute the query");
-		}
-		
-		String mostExpensiveHousesByCategory="Select category, hid , averageCost from (SELECT hid, Category , averageCost, @rank := IF(@currentC = Category, @rank + 1, 1) AS category_count, @currentC := Category FROM (Select V.hid, TH.Category , avg(V.cost) as averageCost from Visit V join TH on (V.hid = TH.hid) group by category , hid order by category desc, averageCost desc) as realQ) as sub where category_count <= "+listSize+";";
-		try
-		{
-			rs=stmt.executeQuery(mostExpensiveHousesByCategory);
-			
-			if(!rs.last())
+			String mostExpensiveHousesByCategory="Select category, hid , averageCost from (SELECT hid, Category , averageCost, @rank := IF(@currentC = Category, @rank + 1, 1) AS category_count, @currentC := Category FROM (Select V.hid, TH.Category , avg(V.cost) as averageCost from Visit V join TH on (V.hid = TH.hid) group by category , hid order by category desc, averageCost desc) as realQ) as sub where category_count <= "+listSize+";";
+			try
 			{
-				System.out.println("No house has been visited by any registered categories.");
-				return;
+				rs=stmt.executeQuery(mostExpensiveHousesByCategory);
+				
+				if(!rs.last())
+				{
+					System.out.println("No house has been visited by any registered categories.");
+					return "none";
+				}
+				rs.beforeFirst();
+				
+				System.out.println(listSize + " most expensive THs by category.");
+				System.out.println();
+				System.out.format("%32s %5s %15s %n", "[category]", "[hid]" , "[averageCost]");
+				while (rs.next())
+				{
+					output+=(rs.getString("category")+"---"+ rs.getString("hid")+"---"+rs.getString("averageCost")+"|"); 
+				}
+				stmt.executeQuery("Select @rank := 1;");
+				
+				return output;
 			}
-			rs.beforeFirst();
-			
-			System.out.println(listSize + " most expensive THs by category.");
-			System.out.println();
-			System.out.format("%32s %5s %15s %n", "[category]", "[hid]" , "[averageCost]");
-			while (rs.next())
+			catch(Exception e)
 			{
-				System.out.format("%32s %5s %15s %n", rs.getString("category") , rs.getString("hid") , rs.getString("averageCost")); 
+				//System.err.println(e.getMessage());
+				System.err.println("cannot execute the query");
+				return null;
 			}
-			stmt.executeQuery("Select @rank := 1;");
 		}
-		catch(Exception e)
+		else
 		{
-			//System.err.println(e.getMessage());
-			System.err.println("cannot execute the query");
-		}
-		
-		String mostHighlyRatedTHByCategory="Select category, hid , averageScore  from (SELECT hid, Category , averageScore, @rank := IF(@currentC = Category, @rank + 1, 1) AS category_count, @currentC := Category FROM (Select V.hid, TH.Category , avg(V.score) as averageScore from Feedback V join TH on (V.hid = TH.hid) group by category, hid order by category desc , averageScore desc) as realQ) as sub where category_count <= "+listSize+";";
-		try
-		{
-			rs=stmt.executeQuery(mostHighlyRatedTHByCategory);
-			
-			if(!rs.last())
+			String mostHighlyRatedTHByCategory="Select category, hid , averageScore  from (SELECT hid, Category , averageScore, @rank := IF(@currentC = Category, @rank + 1, 1) AS category_count, @currentC := Category FROM (Select V.hid, TH.Category , avg(V.score) as averageScore from Feedback V join TH on (V.hid = TH.hid) group by category, hid order by category desc , averageScore desc) as realQ) as sub where category_count <= "+listSize+";";
+			try
 			{
-				System.out.println("No house has been visited by any registered categories.");
-				return;
-			}
-			rs.first();
-			
-			System.out.println(listSize + " best rated THs by category.");
-			System.out.println();
-			System.out.format("%32s %5s %14s %n", rs.getString("category") , rs.getString("hid") , rs.getString("averageScore")); 
-			while (rs.next())
-			{
+				rs=stmt.executeQuery(mostHighlyRatedTHByCategory);
+				
+				if(!rs.last())
+				{
+					System.out.println("No house has been visited by any registered categories.");
+					return "noneR";
+				}
+				rs.first();
+				
+				System.out.println(listSize + " best rated THs by category.");
+				System.out.println();
 				System.out.format("%32s %5s %14s %n", rs.getString("category") , rs.getString("hid") , rs.getString("averageScore")); 
+				while (rs.next())
+				{
+					output+=(rs.getString("category")+"---"+ rs.getString("hid")+"---"+rs.getString("averageScore")+"|"); 
+				}
+				stmt.executeQuery("Select @rank := 1;");
+				
+				return output;
 			}
-			stmt.executeQuery("Select @rank := 1;");
-		}
-		catch(Exception e)
-		{
-			System.err.println(e.getMessage());
-			System.err.println("cannot execute the query");
+			catch(Exception e)
+			{
+				System.err.println(e.getMessage());
+				System.err.println("cannot execute the query");
+				return null;
+			}
 		}
 	}
 	
-	public void getUserStats(User usr, Statement stmt)
+	public void getUserStats(Statement stmt)
 	{
 		int listSize;
 		try{listSize = Integer.parseInt(readInput("Enter the amount list size for the following statistics (m)"));}catch (Exception e){ System.err.println("Invalid list size input."); return;}
