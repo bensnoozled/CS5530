@@ -45,6 +45,7 @@ else if(choice == null || topN == null)
 	<%
 	for(int i = 0; i < regHouses.length; i++)
 	{
+		
 		String[] rH = regHouses[i].split("---");
 		%>
 		  <tr>

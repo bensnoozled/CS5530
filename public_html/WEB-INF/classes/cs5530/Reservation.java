@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * Created by ben on 3/6/17.
  */
 public class Reservation{
-	Reservation(){};
+	public Reservation(){};
 
 	public String getM_login() {
 		return m_login;
@@ -69,27 +69,27 @@ public class Reservation{
 	String m_start;
 	String m_end;
 
-	public boolean createReservation(cs5530.User user, Statement stmt) {
+	public String createReservation(String login, String startDate, String endDate, String selection, Statement stmt) {
 		int hid = 0;
 		int c = 1;
-		try{hid = Integer.parseInt(readInput("Enter desired HID number for your reservation"));}catch (Exception e){ c = -1; }
+		try{hid = Integer.parseInt(selection);}catch (Exception e){ c = -1; }
 		String output = "";
 		ResultSet rs = null;
 		ResultSet rs1 = null;
 
 
-		String startDate = readInput("Enter desired start date.\nMust be in the format of yyyy-MM-dd");
-		if(!dateValidator(startDate))
-		{
-			startDate = readInput("Invalid date! Please insert a valid date\nMust be in the format of yyyy-MM-dd");
-		}
-
-		String endDate = readInput("Enter desired end date.\nMust be in the format of yyyy-MM-dd");
-		if(!dateValidator(startDate))
-		{
-			endDate = readInput("Invalid date! Please insert a valid date\nMust be in the format of yyyy-MM-dd");
-		}
-
+//		String startDate = readInput("Enter desired start date.\nMust be in the format of yyyy-MM-dd");
+//		if(!dateValidator(startDate))
+//		{
+//			startDate = readInput("Invalid date! Please insert a valid date\nMust be in the format of yyyy-MM-dd");
+//		}
+//
+//		String endDate = readInput("Enter desired end date.\nMust be in the format of yyyy-MM-dd");
+//		if(!dateValidator(startDate))
+//		{
+//			endDate = readInput("Invalid date! Please insert a valid date\nMust be in the format of yyyy-MM-dd");
+//		}
+//
 		String sql = "Select * from Reserve R, Period P where R.hid = P.pid and R.pid = " + hid + " and P.to >= DATE_FORMAT('" + startDate + "', '%Y-%c-%d' )AND P.from  <= DATE_FORMAT('" + endDate + "', '%Y-%c-%d') ";
 		while (c == 1)
 		{
@@ -107,67 +107,24 @@ public class Reservation{
 
 			}
 			if (output != "") {
-				try {
-					c = Integer.parseInt(readInput("A reservation exists for that date. Try again?\n 1: yes\n 2:  no"));
-				} catch (Exception e) {
-					c = -1;
-					continue;
-				}
+				return "Overlaps an existing reservation. Select a different TH or date range and try again";	
 			} else {
 				try {
-					c = Integer.parseInt(readInput("Dates availiable! Do you wish to proceed with reservation creation? " +
+					return ("Dates availiable! Do you wish to proceed with reservation creation? " +
 							"The following reservation will be made:\n" +
-							"From " + startDate + " to " + endDate + " for housing number " + hid + "\n 1: yes\n2: no"));
-
-					String sqlCheck = "SELECT COUNT(pid) as count FROM Period WHERE `from` = DATE_FORMAT('" + startDate + "', '%Y-%c-%d' ) and `to` = DATE_FORMAT('" + endDate + "', '%Y-%c-%d')";
-					rs1 = stmt.executeQuery(sqlCheck);
-
-						rs1.next();
-						String result = rs1.getString("count");
-						if (Integer.parseInt(result) == 0) {
-							String periodSql = "INSERT INTO `Period` (`from`, `to`) VALUES ('" + startDate + "', '" + endDate + "')";
-							stmt.executeUpdate(periodSql);
-						}
-
-
-
-					String reservationSql = "INSERT INTO `5530db40`.`Reserve` (`login`, `hid`, `pid`, `cost`) VALUES ('" + user.m_login + "', 1, (SELECT pid from Period WHERE `from` = DATE_FORMAT('" + startDate + "', '%Y-%c-%d' ) and `to` = DATE_FORMAT('" + endDate + "', '%Y-%c-%d')), (SELECT pricePerNight FROM Available WHERE hid = " + hid + "));";
-
-					if(c == 1)
-					{
-						int queryResult;
-
-						queryResult=stmt.executeUpdate(reservationSql);
-
-						if(queryResult > 0)
-						{
-							System.out.println("Reservation successfully made!");
-							return true;
-						}
-						else
-						{
-							System.out.println("Reservation not created. Check input fields.");
-							return false;
-						}
-
-					}
-					else
-					{
-						System.out.println("Reservation cancelled");
-						return false;
-					}
+							"From " + startDate + " to " + endDate + " for housing number " + hid);
 
 
 
 				} catch (Exception e) {
-					System.out.println("Reservation not created. Check input fields.");
-					return false;
+					return "Reservation not created. Check input fields.";
+					
 				}
 
 			}
 
 		}
-		return false;
+		return "There's been a hoorible error";	
 	}
 	public static boolean dateValidator(String date)
 	{
@@ -199,5 +156,50 @@ public class Reservation{
 	public String print()
 	{
 		return "    pid: " + this.m_pid + " hid: " + this.m_hid + " start date: " + this.m_start + " end: " + this.m_end;
+	}
+
+	public String confirm(String login, String selection, String startDate, String endDate, Statement stmt)
+	{
+		int hid = 0;
+		int c = 1;
+		try{hid = Integer.parseInt(selection);}catch (Exception e){ c = -1; }
+		String output = "";
+		ResultSet rs = null;
+		ResultSet rs1 = null;
+		String sqlCheck = "";	
+		String reservationSql = "";
+		try
+		{	
+		sqlCheck = "SELECT COUNT(pid) as count FROM Period WHERE `from` = DATE_FORMAT('" + startDate + "', '%Y-%c-%d' ) and `to` = DATE_FORMAT('" + endDate + "', '%Y-%c-%d')";
+		rs1 = stmt.executeQuery(sqlCheck);
+
+		rs1.next();
+		String result = rs1.getString("count");
+		if (Integer.parseInt(result) == 0) {
+			String periodSql = "INSERT INTO `Period` (`from`, `to`) VALUES ('" + startDate + "', '" + endDate + "')";
+			stmt.executeUpdate(periodSql);
+		}
+
+
+
+		reservationSql = "INSERT INTO `5530db40`.`Reserve` (`login`, `hid`, `pid`, `cost`) VALUES ('" + login + "'," + hid +", (SELECT pid from Period WHERE `from` = DATE_FORMAT('" + startDate + "', '%Y-%c-%d' ) and `to` = DATE_FORMAT('" + endDate + "', '%Y-%c-%d')), (SELECT pricePerNight FROM Available WHERE hid = " + hid + "));";
+
+			int queryResult;
+
+			queryResult=stmt.executeUpdate(reservationSql);
+
+			if(queryResult > 0)
+			{
+				return "Reservation successfully made!";
+			}
+			else
+			{
+				return "Reservation not created. Check input fields.";
+			}
+		}
+		catch(Exception e)
+		{
+			return e.getMessage() + " |   " + sqlCheck + "   |   " + reservationSql;
+		}
 	}
 }

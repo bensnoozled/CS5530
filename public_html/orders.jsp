@@ -43,6 +43,7 @@ if( searchAttribute == null ){
 
 	attributeValue = request.getParameter("attributeValue");
 	Connector connector = new Connector();
+//	con= new Connector();
 	String login = "";
 	String password = "";
 	String name = "";
